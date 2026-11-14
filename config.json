@@ -9,6 +9,9 @@
     "e-commerce"
   ],
 
+  "departement": "63",
+
+  "_aide_adzuna": "lieu et distance_km ne servent que pour la source Adzuna (payante, désactivée)",
   "lieu": "Clermont-Ferrand",
   "distance_km": 70,
 
@@ -23,7 +26,8 @@
   "garder_les_offres_pendant_jours": 45,
 
   "sources": {
-    "adzuna": true,
+    "france_travail": true,
+    "adzuna": false,
     "remotive": false
   }
 }

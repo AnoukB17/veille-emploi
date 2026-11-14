@@ -3,7 +3,7 @@ collecte.py — le "robot" qui va chercher les offres d'emploi.
 
 Ce qu'il fait, dans l'ordre :
   1. lit tes réglages dans config.json
-  2. COLLECTE : interroge les sources (Adzuna, Remotive...)
+  2. COLLECTE : interroge les sources (France Travail, Remotive...)
   3. FILTRE   : garde seulement les offres qui correspondent à tes critères
   4. STOCKE   : ajoute les nouvelles offres dans docs/offres.json
                (le fichier que lit ta page web)
@@ -14,6 +14,7 @@ Tu peux aussi le lancer toi-même sur ton ordinateur : python collecte.py
 
 import json
 import os
+import time
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
@@ -40,7 +41,7 @@ def telecharger_json(url):
 #    pour que la suite du programme n'ait pas à savoir d'où elles viennent.
 # ---------------------------------------------------------------------------
 def collecter_adzuna(config):
-    """Adzuna : regroupe des offres de nombreux sites français. Clé gratuite requise."""
+    """Adzuna : regroupe des offres de nombreux sites. Attention : API devenue payante (désactivée par défaut)."""
     # .strip() enlève les espaces ou retours à la ligne copiés par erreur
     app_id = (os.environ.get("ADZUNA_APP_ID") or "").strip()
     app_key = (os.environ.get("ADZUNA_APP_KEY") or "").strip()
@@ -87,6 +88,76 @@ def collecter_adzuna(config):
     return offres
 
 
+def collecter_france_travail(config):
+    """France Travail (ex-Pôle emploi) : l'API officielle et gratuite, la plus grosse source en France."""
+    client_id = (os.environ.get("FRANCE_TRAVAIL_CLIENT_ID") or "").strip()
+    client_secret = (os.environ.get("FRANCE_TRAVAIL_CLIENT_SECRET") or "").strip()
+    if not client_id or not client_secret:
+        print("⚠️  France Travail ignoré : clés FRANCE_TRAVAIL_CLIENT_ID / FRANCE_TRAVAIL_CLIENT_SECRET absentes (voir README).")
+        return []
+
+    # Étape A : échanger nos identifiants contre un "jeton" d'accès valable quelques minutes
+    try:
+        corps = urllib.parse.urlencode({
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "scope": "api_offresdemploiv2 o2dsoffre",
+        }).encode("utf-8")
+        requete = urllib.request.Request(
+            "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=%2Fpartenaire",
+            data=corps,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        with urllib.request.urlopen(requete, timeout=30) as reponse:
+            jeton = json.loads(reponse.read().decode("utf-8"))["access_token"]
+    except Exception as erreur:
+        print(f"❌ France Travail, connexion refusée : {erreur}")
+        print("   → Vérifie tes deux clés, et que l'API « Offres d'emploi v2 » est bien ajoutée à ton application.")
+        ERREURS.append(erreur)
+        return []
+
+    # Étape B : une recherche par mot-clé
+    offres = []
+    for recherche in config["recherches"]:
+        parametres = {
+            "motsCles": recherche,
+            "departement": config.get("departement", ""),
+            "publieeDepuis": 14,      # offres publiées depuis 14 jours maximum
+            "range": "0-99",          # les 100 premières offres
+        }
+        url = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?" + urllib.parse.urlencode(parametres)
+        try:
+            requete = urllib.request.Request(url, headers={"Authorization": "Bearer " + jeton, "Accept": "application/json"})
+            with urllib.request.urlopen(requete, timeout=30) as reponse:
+                contenu = reponse.read().decode("utf-8")
+            # Quand il n'y a aucune offre, France Travail renvoie une réponse vide
+            resultats = json.loads(contenu).get("resultats", []) if contenu.strip() else []
+        except Exception as erreur:
+            print(f"❌ France Travail, recherche « {recherche} » : {erreur}")
+            ERREURS.append(erreur)
+            continue
+
+        for o in resultats:
+            lien = (o.get("origineOffre") or {}).get("urlOrigine") or \
+                "https://candidat.francetravail.fr/offres/recherche/detail/" + str(o.get("id", ""))
+            offres.append({
+                "titre": o.get("intitule", ""),
+                "entreprise": (o.get("entreprise") or {}).get("nom", "") or "Entreprise non précisée",
+                "lieu": (o.get("lieuTravail") or {}).get("libelle", ""),
+                "description": o.get("description", ""),
+                "salaire_min": None,
+                "contrat": o.get("typeContratLibelle") or o.get("typeContrat") or "",
+                "lien": lien,
+                "publiee_le": (o.get("dateCreation") or "")[:10],
+                "source": "France Travail",
+                "recherche": recherche,
+            })
+        print(f"✅ France Travail, « {recherche} » : {len(resultats)} offres")
+        time.sleep(0.5)   # petite pause : l'API limite le nombre d'appels par seconde
+    return offres
+
+
 def collecter_remotive(config):
     """Remotive : offres en télétravail (souvent en anglais). Aucune clé nécessaire."""
     offres = []
@@ -117,6 +188,7 @@ def collecter_remotive(config):
 
 
 SOURCES = {
+    "france_travail": collecter_france_travail,
     "adzuna": collecter_adzuna,
     "remotive": collecter_remotive,
 }
