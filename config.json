@@ -1,13 +1,22 @@
 {
   "_aide": "C'est ICI que tu règles ta recherche. Modifie les valeurs entre guillemets, garde les virgules et les crochets.",
 
-  "recherches": ["chargée de communication", "community manager"],
+  "recherches": [
+    "chargé de projet e-commerce",
+    "chef de projet e-commerce",
+    "chargé e-commerce",
+    "responsable e-commerce",
+    "e-commerce"
+  ],
 
-  "lieu": "Lyon",
-  "distance_km": 30,
+  "lieu": "Clermont-Ferrand",
+  "distance_km": 70,
 
   "mots_obligatoires": [],
-  "mots_exclus": ["stage", "stagiaire", "alternance"],
+  "mots_exclus": [
+    "stage", "stagiaire", "alternance", "alternant", "apprenti",
+    "préparateur", "préparatrice", "magasinier", "cariste", "livreur", "manutention"
+  ],
 
   "salaire_min": 0,
 
