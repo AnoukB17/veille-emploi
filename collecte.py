@@ -21,6 +21,9 @@ from datetime import datetime, timedelta, timezone
 FICHIER_CONFIG = "config.json"
 FICHIER_OFFRES = "docs/offres.json"
 
+# On note ici chaque problème rencontré pendant la collecte
+ERREURS = []
+
 
 # ---------------------------------------------------------------------------
 # Petit outil : télécharger une adresse web et lire la réponse en JSON
@@ -38,8 +41,9 @@ def telecharger_json(url):
 # ---------------------------------------------------------------------------
 def collecter_adzuna(config):
     """Adzuna : regroupe des offres de nombreux sites français. Clé gratuite requise."""
-    app_id = os.environ.get("ADZUNA_APP_ID")
-    app_key = os.environ.get("ADZUNA_APP_KEY")
+    # .strip() enlève les espaces ou retours à la ligne copiés par erreur
+    app_id = (os.environ.get("ADZUNA_APP_ID") or "").strip()
+    app_key = (os.environ.get("ADZUNA_APP_KEY") or "").strip()
     if not app_id or not app_key:
         print("⚠️  Adzuna ignoré : clés ADZUNA_APP_ID / ADZUNA_APP_KEY absentes (voir README).")
         return []
@@ -61,6 +65,9 @@ def collecter_adzuna(config):
             donnees = telecharger_json(url)
         except Exception as erreur:
             print(f"❌ Adzuna, recherche « {recherche} » : {erreur}")
+            if "401" in str(erreur):
+                print("   → Adzuna refuse tes clés : vérifie ADZUNA_APP_ID et ADZUNA_APP_KEY (voir README).")
+            ERREURS.append(erreur)
             continue
 
         for o in donnees.get("results", []):
@@ -89,6 +96,7 @@ def collecter_remotive(config):
             donnees = telecharger_json(url)
         except Exception as erreur:
             print(f"❌ Remotive, recherche « {recherche} » : {erreur}")
+            ERREURS.append(erreur)
             continue
 
         for o in donnees.get("jobs", []):
@@ -201,6 +209,11 @@ def main():
         json.dump({"mise_a_jour": aujourd_hui, "offres": existantes}, f, ensure_ascii=False, indent=1)
 
     print(f"✨ {nouvelles} nouvelle(s) offre(s) — {len(existantes)} au total dans {FICHIER_OFFRES}")
+
+    # Si AUCUNE source n'a répondu, on termine en erreur : GitHub affichera une croix rouge
+    if ERREURS and not collectees:
+        print("❌ Aucune source n'a fonctionné : regarde les messages ci-dessus.")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
