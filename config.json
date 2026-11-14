@@ -1,0 +1,20 @@
+{
+  "_aide": "C'est ICI que tu règles ta recherche. Modifie les valeurs entre guillemets, garde les virgules et les crochets.",
+
+  "recherches": ["chargée de communication", "community manager"],
+
+  "lieu": "Lyon",
+  "distance_km": 30,
+
+  "mots_obligatoires": [],
+  "mots_exclus": ["stage", "stagiaire", "alternance"],
+
+  "salaire_min": 0,
+
+  "garder_les_offres_pendant_jours": 45,
+
+  "sources": {
+    "adzuna": true,
+    "remotive": false
+  }
+}

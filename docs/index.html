@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ma veille emploi</title>
+<style>
+  :root {
+    --fond: #f6f5f2; --carte: #ffffff; --texte: #1d1d1f; --doux: #6b6b70;
+    --bord: #e3e1dc; --accent: #2f5bd3; --nouveau: #1f8a4c; --postule: #8a5a1f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --fond: #151517; --carte: #1f1f22; --texte: #ececef; --doux: #9a9aa2;
+            --bord: #333338; --accent: #7d9cff; --nouveau: #4fc483; --postule: #e0a85c; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fond); color: var(--texte);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  .maj { color: var(--doux); margin: 0 0 20px; font-size: .9rem; }
+  .barre { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .barre input, .barre select { font: inherit; padding: 8px 12px; border: 1px solid var(--bord);
+         border-radius: 8px; background: var(--carte); color: var(--texte); }
+  .barre input { flex: 1 1 220px; }
+  .compte { color: var(--doux); font-size: .9rem; margin-bottom: 12px; }
+  .offre { background: var(--carte); border: 1px solid var(--bord); border-radius: 12px;
+           padding: 16px; margin-bottom: 12px; }
+  .offre.vue { opacity: .55; }
+  .offre h2 { font-size: 1.1rem; margin: 0 0 4px; }
+  .offre h2 a { color: var(--accent); text-decoration: none; }
+  .offre h2 a:hover { text-decoration: underline; }
+  .infos { color: var(--doux); font-size: .9rem; }
+  .desc { margin: 8px 0 10px; font-size: .92rem; }
+  .badge { display: inline-block; font-size: .75rem; font-weight: 600; padding: 2px 8px;
+           border-radius: 99px; margin-right: 6px; vertical-align: middle; }
+  .b-nouveau { background: color-mix(in srgb, var(--nouveau) 18%, transparent); color: var(--nouveau); }
+  .b-postule { background: color-mix(in srgb, var(--postule) 18%, transparent); color: var(--postule); }
+  .actions button { font: inherit; font-size: .85rem; padding: 4px 10px; margin-right: 6px;
+           border: 1px solid var(--bord); border-radius: 6px; background: transparent;
+           color: var(--texte); cursor: pointer; }
+  .actions button.actif { border-color: var(--accent); color: var(--accent); }
+  .vide { text-align: center; color: var(--doux); padding: 40px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ma veille emploi</h1>
+  <p class="maj" id="maj">Chargement…</p>
+
+  <div class="barre">
+    <input id="recherche" type="search" placeholder="Rechercher (titre, entreprise, ville…)">
+    <select id="filtre">
+      <option value="toutes">Toutes les offres</option>
+      <option value="nouvelles">Nouvelles (3 derniers jours)</option>
+      <option value="a-voir">Pas encore vues</option>
+      <option value="postule">J'ai postulé</option>
+    </select>
+  </div>
+
+  <div class="compte" id="compte"></div>
+  <div id="liste"></div>
+</main>
+
+<script>
+  // Tes marques "vue" / "postulé" sont gardées dans ton navigateur (pas sur GitHub).
+  function lireStatuts() {
+    try { return JSON.parse(localStorage.getItem("statuts") || "{}"); } catch (e) { return {}; }
+  }
+  function sauverStatuts(s) {
+    try { localStorage.setItem("statuts", JSON.stringify(s)); } catch (e) {}
+  }
+
+  let offres = [];
+  let statuts = lireStatuts();
+
+  function echapper(t) {
+    const d = document.createElement("div"); d.textContent = t || ""; return d.innerHTML;
+  }
+  function dateFr(iso) {
+    if (!iso) return "";
+    const [a, m, j] = iso.split("-"); return `${j}/${m}/${a}`;
+  }
+  function estNouvelle(o) {
+    return (Date.now() - new Date(o.ajoutee_le).getTime()) < 3 * 24 * 3600 * 1000;
+  }
+
+  function afficher() {
+    const q = document.getElementById("recherche").value.toLowerCase().trim();
+    const filtre = document.getElementById("filtre").value;
+
+    const visibles = offres.filter(o => {
+      const st = statuts[o.lien] || {};
+      if (filtre === "nouvelles" && !estNouvelle(o)) return false;
+      if (filtre === "a-voir" && st.vue) return false;
+      if (filtre === "postule" && !st.postule) return false;
+      if (q && !(o.titre + " " + o.entreprise + " " + o.lieu + " " + o.description).toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    document.getElementById("compte").textContent =
+      `${visibles.length} offre${visibles.length > 1 ? "s" : ""} affichée${visibles.length > 1 ? "s" : ""}`;
+
+    const liste = document.getElementById("liste");
+    if (!visibles.length) {
+      liste.innerHTML = `<p class="vide">${offres.length ? "Aucune offre ne correspond à ce filtre." :
+        "Pas encore d'offres. Le robot passe chaque matin — ou lance-le à la main depuis l'onglet Actions."}</p>`;
+      return;
+    }
+
+    liste.innerHTML = visibles.map((o, i) => {
+      const st = statuts[o.lien] || {};
+      return `
+      <article class="offre ${st.vue && !st.postule ? "vue" : ""}">
+        <h2>
+          ${estNouvelle(o) ? '<span class="badge b-nouveau">Nouveau</span>' : ""}
+          ${st.postule ? '<span class="badge b-postule">Postulé</span>' : ""}
+          <a href="${echapper(o.lien)}" target="_blank" rel="noopener" data-i="${i}" class="lien">${echapper(o.titre)}</a>
+        </h2>
+        <div class="infos">
+          ${echapper(o.entreprise)}${o.lieu ? " · " + echapper(o.lieu) : ""}${o.contrat ? " · " + echapper(o.contrat) : ""}
+          ${o.salaire_min ? " · dès " + Math.round(o.salaire_min).toLocaleString("fr-FR") + " €" : ""}
+        </div>
+        <p class="desc">${echapper(o.description)}</p>
+        <div class="infos actions">
+          <button data-i="${i}" data-action="vue" class="${st.vue ? "actif" : ""}">${st.vue ? "✓ Vue" : "Marquer vue"}</button>
+          <button data-i="${i}" data-action="postule" class="${st.postule ? "actif" : ""}">${st.postule ? "✓ Postulé" : "J'ai postulé"}</button>
+          <span>Publiée le ${dateFr(o.publiee_le)} · ${echapper(o.source)}</span>
+        </div>
+      </article>`;
+    }).join("");
+
+    liste.querySelectorAll("button[data-action]").forEach(b => b.onclick = () => {
+      const o = visibles[b.dataset.i];
+      const st = statuts[o.lien] = statuts[o.lien] || {};
+      st[b.dataset.action] = !st[b.dataset.action];
+      if (b.dataset.action === "postule" && st.postule) st.vue = true;
+      sauverStatuts(statuts); afficher();
+    });
+    liste.querySelectorAll("a.lien").forEach(a => a.addEventListener("click", () => {
+      const o = visibles[a.dataset.i];
+      statuts[o.lien] = { ...(statuts[o.lien] || {}), vue: true };
+      sauverStatuts(statuts); setTimeout(afficher, 300);
+    }));
+  }
+
+  fetch("offres.json?v=" + Date.now())
+    .then(r => r.json())
+    .then(d => {
+      offres = d.offres || [];
+      document.getElementById("maj").textContent =
+        d.mise_a_jour ? `Dernière collecte : ${dateFr(d.mise_a_jour)} · ${offres.length} offres au total` : "Aucune collecte pour l'instant";
+      afficher();
+    })
+    .catch(() => { document.getElementById("maj").textContent = "Impossible de charger les offres."; });
+
+  document.getElementById("recherche").oninput = afficher;
+  document.getElementById("filtre").onchange = afficher;
+</script>
+</body>
+</html>

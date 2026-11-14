@@ -1,0 +1,207 @@
+"""
+collecte.py — le "robot" qui va chercher les offres d'emploi.
+
+Ce qu'il fait, dans l'ordre :
+  1. lit tes réglages dans config.json
+  2. COLLECTE : interroge les sources (Adzuna, Remotive...)
+  3. FILTRE   : garde seulement les offres qui correspondent à tes critères
+  4. STOCKE   : ajoute les nouvelles offres dans docs/offres.json
+               (le fichier que lit ta page web)
+
+GitHub Actions lance ce fichier automatiquement chaque matin.
+Tu peux aussi le lancer toi-même sur ton ordinateur : python collecte.py
+"""
+
+import json
+import os
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta, timezone
+
+FICHIER_CONFIG = "config.json"
+FICHIER_OFFRES = "docs/offres.json"
+
+
+# ---------------------------------------------------------------------------
+# Petit outil : télécharger une adresse web et lire la réponse en JSON
+# ---------------------------------------------------------------------------
+def telecharger_json(url):
+    requete = urllib.request.Request(url, headers={"User-Agent": "veille-emploi/1.0"})
+    with urllib.request.urlopen(requete, timeout=30) as reponse:
+        return json.loads(reponse.read().decode("utf-8"))
+
+
+# ---------------------------------------------------------------------------
+# 2. COLLECTE — une fonction par source
+#    Chaque fonction renvoie une liste d'offres au MÊME format (un dictionnaire)
+#    pour que la suite du programme n'ait pas à savoir d'où elles viennent.
+# ---------------------------------------------------------------------------
+def collecter_adzuna(config):
+    """Adzuna : regroupe des offres de nombreux sites français. Clé gratuite requise."""
+    app_id = os.environ.get("ADZUNA_APP_ID")
+    app_key = os.environ.get("ADZUNA_APP_KEY")
+    if not app_id or not app_key:
+        print("⚠️  Adzuna ignoré : clés ADZUNA_APP_ID / ADZUNA_APP_KEY absentes (voir README).")
+        return []
+
+    offres = []
+    for recherche in config["recherches"]:
+        parametres = {
+            "app_id": app_id,
+            "app_key": app_key,
+            "what": recherche,
+            "where": config.get("lieu", ""),
+            "distance": config.get("distance_km", 30),
+            "results_per_page": 50,
+            "max_days_old": 14,
+            "sort_by": "date",
+        }
+        url = "https://api.adzuna.com/v1/api/jobs/fr/search/1?" + urllib.parse.urlencode(parametres)
+        try:
+            donnees = telecharger_json(url)
+        except Exception as erreur:
+            print(f"❌ Adzuna, recherche « {recherche} » : {erreur}")
+            continue
+
+        for o in donnees.get("results", []):
+            offres.append({
+                "titre": o.get("title", ""),
+                "entreprise": o.get("company", {}).get("display_name", ""),
+                "lieu": o.get("location", {}).get("display_name", ""),
+                "description": o.get("description", ""),
+                "salaire_min": o.get("salary_min"),
+                "contrat": o.get("contract_type") or "",
+                "lien": o.get("redirect_url", ""),
+                "publiee_le": (o.get("created") or "")[:10],
+                "source": "Adzuna",
+                "recherche": recherche,
+            })
+        print(f"✅ Adzuna, « {recherche} » : {len(donnees.get('results', []))} offres")
+    return offres
+
+
+def collecter_remotive(config):
+    """Remotive : offres en télétravail (souvent en anglais). Aucune clé nécessaire."""
+    offres = []
+    for recherche in config["recherches"]:
+        url = "https://remotive.com/api/remote-jobs?" + urllib.parse.urlencode({"search": recherche})
+        try:
+            donnees = telecharger_json(url)
+        except Exception as erreur:
+            print(f"❌ Remotive, recherche « {recherche} » : {erreur}")
+            continue
+
+        for o in donnees.get("jobs", []):
+            offres.append({
+                "titre": o.get("title", ""),
+                "entreprise": o.get("company_name", ""),
+                "lieu": "Télétravail – " + (o.get("candidate_required_location") or ""),
+                "description": o.get("description", ""),
+                "salaire_min": None,
+                "contrat": o.get("job_type") or "",
+                "lien": o.get("url", ""),
+                "publiee_le": (o.get("publication_date") or "")[:10],
+                "source": "Remotive",
+                "recherche": recherche,
+            })
+        print(f"✅ Remotive, « {recherche} » : {len(donnees.get('jobs', []))} offres")
+    return offres
+
+
+SOURCES = {
+    "adzuna": collecter_adzuna,
+    "remotive": collecter_remotive,
+}
+
+
+# ---------------------------------------------------------------------------
+# 3. FILTRE — est-ce que cette offre m'intéresse ?
+# ---------------------------------------------------------------------------
+def offre_interessante(offre, config):
+    texte = (offre["titre"] + " " + offre["description"]).lower()
+
+    # Un mot exclu dans le TITRE suffit à écarter l'offre
+    for mot in config.get("mots_exclus", []):
+        if mot.lower() in offre["titre"].lower():
+            return False
+
+    # Tous les mots obligatoires doivent apparaître (titre ou description)
+    for mot in config.get("mots_obligatoires", []):
+        if mot.lower() not in texte:
+            return False
+
+    # Salaire minimum (seulement si l'offre indique un salaire)
+    salaire_min = config.get("salaire_min", 0)
+    if salaire_min and offre["salaire_min"] and offre["salaire_min"] < salaire_min:
+        return False
+
+    return True
+
+
+# ---------------------------------------------------------------------------
+# 4. STOCKAGE — fusionner avec les offres déjà connues
+# ---------------------------------------------------------------------------
+def charger_offres_existantes():
+    if not os.path.exists(FICHIER_OFFRES):
+        return []
+    with open(FICHIER_OFFRES, encoding="utf-8") as f:
+        return json.load(f).get("offres", [])
+
+
+def nettoyer_description(texte, longueur=400):
+    """Enlève les balises HTML et raccourcit la description."""
+    import re
+    texte = re.sub(r"<[^>]+>", " ", texte or "")
+    texte = re.sub(r"\s+", " ", texte).strip()
+    return texte[:longueur] + ("…" if len(texte) > longueur else "")
+
+
+def main():
+    with open(FICHIER_CONFIG, encoding="utf-8") as f:
+        config = json.load(f)
+
+    aujourd_hui = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # Collecte de toutes les sources activées
+    collectees = []
+    for nom, active in config.get("sources", {}).items():
+        if active and nom in SOURCES:
+            collectees += SOURCES[nom](config)
+
+    # Filtre
+    retenues = [o for o in collectees if o["lien"] and offre_interessante(o, config)]
+    print(f"🔎 {len(collectees)} offres collectées, {len(retenues)} correspondent à tes critères")
+
+    # Fusion : le lien sert d'identifiant unique, pour ne jamais garder de doublon
+    existantes = charger_offres_existantes()
+    deja_vus = {o["lien"] for o in existantes}
+    titres_vus = {(o["titre"].lower(), o["entreprise"].lower()) for o in existantes}
+
+    nouvelles = 0
+    for o in retenues:
+        cle_titre = (o["titre"].lower(), o["entreprise"].lower())
+        if o["lien"] in deja_vus or cle_titre in titres_vus:
+            continue
+        o["description"] = nettoyer_description(o["description"])
+        o["ajoutee_le"] = aujourd_hui
+        existantes.append(o)
+        deja_vus.add(o["lien"])
+        titres_vus.add(cle_titre)
+        nouvelles += 1
+
+    # On oublie les offres trop anciennes
+    limite = (datetime.now(timezone.utc) - timedelta(days=config.get("garder_les_offres_pendant_jours", 45))).strftime("%Y-%m-%d")
+    existantes = [o for o in existantes if o["ajoutee_le"] >= limite]
+
+    # Les plus récentes en premier
+    existantes.sort(key=lambda o: (o["ajoutee_le"], o["publiee_le"]), reverse=True)
+
+    os.makedirs(os.path.dirname(FICHIER_OFFRES), exist_ok=True)
+    with open(FICHIER_OFFRES, "w", encoding="utf-8") as f:
+        json.dump({"mise_a_jour": aujourd_hui, "offres": existantes}, f, ensure_ascii=False, indent=1)
+
+    print(f"✨ {nouvelles} nouvelle(s) offre(s) — {len(existantes)} au total dans {FICHIER_OFFRES}")
+
+
+if __name__ == "__main__":
+    main()
