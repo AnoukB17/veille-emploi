@@ -1,4 +1,4 @@
-Collecte du 16/11/2026 à 15:12 UTC
+Collecte du 16/11/2026 à 15:15 UTC
 
 ❌ France Travail, connexion refusée (droits « api_offresdemploiv2 o2dsoffre ») : HTTP Error 400: Bad Request — {"error_description":"Client authentication failed","error":"invalid_client"}
    → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.
