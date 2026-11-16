@@ -1,5 +1,5 @@
 # Le "réveil" du robot : GitHub lit ce fichier et lance la collecte tout seul.
-# Le compte rendu de chaque collecte est enregistré dans docs/journal.txt.
+# Le compte rendu de chaque collecte est enregistré dans docs/journal.txt (visible dans le dépôt).
 
 name: Collecte des offres
 
