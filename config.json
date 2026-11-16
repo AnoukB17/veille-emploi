@@ -27,7 +27,7 @@
 
   "bonne_boite": {
     "_aide": "Entreprises à fort potentiel d'embauche, pour les candidatures spontanées. Le point de départ est Clermont-Ferrand.",
-    "active": true,
+    "active": false,
     "_aide_metiers": "codes_rome = recherche précise par code métier officiel (M1707 = stratégie commerciale, dont responsable e-commerce). metiers = recherche plus large par nom de métier.",
     "codes_rome": ["M1707"],
     "metiers": ["responsable e-commerce"],
@@ -37,9 +37,9 @@
     "nombre_max": 60
   },
 
-  "_aide_sources": "france_travail = l'API Offres d'emploi v2 : à repasser à true le jour où elle est ajoutée à l'application",
+  "_aide_sources": "france_travail = l'API Offres d'emploi v2 de France Travail",
   "sources": {
-    "france_travail": false,
+    "france_travail": true,
     "adzuna": false,
     "remotive": false
   }

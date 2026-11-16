@@ -236,8 +236,13 @@
 
   fetch("entreprises.json?v=" + Date.now())
     .then(r => r.json())
-    .then(d => { entreprises = d.entreprises || []; afficherEntreprises(); })
-    .catch(() => afficherEntreprises());
+    .then(d => { entreprises = d.entreprises || []; afficherEntreprises(); masquerOngletsSiInutile(); })
+    .catch(() => { afficherEntreprises(); masquerOngletsSiInutile(); });
+
+  // S'il n'y a aucune entreprise (La Bonne Boite désactivée), on cache les onglets
+  function masquerOngletsSiInutile() {
+    document.querySelector(".onglets").hidden = entreprises.length === 0;
+  }
 
   function choisirOnglet(nom) {
     for (const n of ["offres", "entreprises"]) {
