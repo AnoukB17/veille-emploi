@@ -4,259 +4,423 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ma veille emploi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ---------- Couleurs (clair, puis sombre) ---------- */
   :root {
-    --fond: #f6f5f2; --carte: #ffffff; --texte: #1d1d1f; --doux: #6b6b70;
-    --bord: #e3e1dc; --accent: #2f5bd3; --nouveau: #1f8a4c; --postule: #8a5a1f;
+    --fond: #f7f4ee; --carte: #ffffff; --texte: #1b1a17; --doux: #6d6a63; --bord: #e6e1d6;
+    --accent: #1f6f54; --accent-fonce: #17533f; --accent-pale: #e3f1ea; --sur-accent: #ffffff;
+    --lave: #d9532b; --lave-pale: #fce9e1; --ambre: #9a6a12; --ambre-pale: #f8edd2;
+    --ombre: 0 1px 2px rgba(40, 30, 10, .05), 0 6px 20px rgba(40, 30, 10, .06);
+    --hero: linear-gradient(135deg, #17533f 0%, #1f6f54 55%, #2f8a63 100%);
   }
   @media (prefers-color-scheme: dark) {
-    :root { --fond: #151517; --carte: #1f1f22; --texte: #ececef; --doux: #9a9aa2;
-            --bord: #333338; --accent: #7d9cff; --nouveau: #4fc483; --postule: #e0a85c; }
+    :root {
+      --fond: #121412; --carte: #1b1e1c; --texte: #eceae4; --doux: #9d9a92; --bord: #2c302d;
+      --accent: #5cc79c; --accent-fonce: #7fd8b3; --accent-pale: #1d3329; --sur-accent: #0d1f18;
+      --lave: #ff8a63; --lave-pale: #3a2219; --ambre: #e6b658; --ambre-pale: #33290f;
+      --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+      --hero: linear-gradient(135deg, #10372a 0%, #17533f 60%, #1f6f54 100%);
+    }
   }
+
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--fond); color: var(--texte);
-         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
-  h1 { font-size: 1.7rem; margin: 0 0 4px; }
-  .maj { color: var(--doux); margin: 0 0 20px; font-size: .9rem; }
-  .barre { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-  .barre input, .barre select { font: inherit; padding: 8px 12px; border: 1px solid var(--bord);
-         border-radius: 8px; background: var(--carte); color: var(--texte); }
-  .barre input { flex: 1 1 220px; }
-  .compte { color: var(--doux); font-size: .9rem; margin-bottom: 12px; }
-  .offre { background: var(--carte); border: 1px solid var(--bord); border-radius: 12px;
-           padding: 16px; margin-bottom: 12px; }
-  .offre.vue { opacity: .55; }
-  .offre h2 { font-size: 1.1rem; margin: 0 0 4px; }
-  .offre h2 a { color: var(--accent); text-decoration: none; }
-  .offre h2 a:hover { text-decoration: underline; }
-  .infos { color: var(--doux); font-size: .9rem; }
-  .desc { margin: 8px 0 10px; font-size: .92rem; }
-  .badge { display: inline-block; font-size: .75rem; font-weight: 600; padding: 2px 8px;
-           border-radius: 99px; margin-right: 6px; vertical-align: middle; }
-  .b-nouveau { background: color-mix(in srgb, var(--nouveau) 18%, transparent); color: var(--nouveau); }
-  .b-postule { background: color-mix(in srgb, var(--postule) 18%, transparent); color: var(--postule); }
-  .actions button { font: inherit; font-size: .85rem; padding: 4px 10px; margin-right: 6px;
-           border: 1px solid var(--bord); border-radius: 6px; background: transparent;
-           color: var(--texte); cursor: pointer; }
-  .actions button.actif { border-color: var(--accent); color: var(--accent); }
-  .actions a { color: var(--accent); }
-  .vide { text-align: center; color: var(--doux); padding: 40px 0; }
-  .onglets { display: flex; gap: 4px; border-bottom: 1px solid var(--bord); margin-bottom: 18px; }
-  .onglets button { font: inherit; font-weight: 600; padding: 10px 14px; border: 0; background: none;
-           color: var(--doux); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
-  .onglets button.actif { color: var(--accent); border-bottom-color: var(--accent); }
-  .explication { color: var(--doux); font-size: .92rem; margin: 0 0 16px; }
-  .potentiel { display: inline-block; width: 70px; height: 7px; border-radius: 99px; background: var(--bord);
-           vertical-align: middle; margin: 0 6px 2px 0; overflow: hidden; }
-  .potentiel i { display: block; height: 100%; background: var(--nouveau); }
+         font: 16px/1.55 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+         -webkit-font-smoothing: antialiased; }
   [hidden] { display: none !important; }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+
+  /* ---------- En-tête ---------- */
+  .hero { background: var(--hero); color: #fff; padding: 36px 16px 76px; position: relative; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; right: -60px; bottom: -120px; width: 420px; height: 260px;
+         background: rgba(255, 255, 255, .07); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }   /* un petit volcan */
+  .hero-in, main { max-width: 900px; margin: 0 auto; }
+  .hero-in { position: relative; z-index: 1; }
+  .sur-titre { font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .8; margin: 0 0 6px; }
+  h1 { font: 800 clamp(1.9rem, 5vw, 2.7rem)/1.1 "Bricolage Grotesque", "Inter", sans-serif; margin: 0 0 8px; letter-spacing: -.02em; }
+  .maj { margin: 0; opacity: .88; font-size: .95rem; }
+  .maj .point { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #8ff0c4; margin-right: 8px;
+         box-shadow: 0 0 0 4px rgba(143, 240, 196, .25); }
+
+  main { padding: 0 16px 50px; }
+
+  /* ---------- Chiffres clés ---------- */
+  .chiffres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: -48px; position: relative; z-index: 2; }
+  .chiffre { background: var(--carte); border: 1px solid var(--bord); border-radius: 16px; padding: 14px 16px; box-shadow: var(--ombre); }
+  .chiffre b { display: block; font: 800 1.8rem/1.1 "Bricolage Grotesque", "Inter", sans-serif; }
+  .chiffre span { color: var(--doux); font-size: .85rem; }
+  .chiffre.nouveau b { color: var(--lave); }
+  .chiffre.postule b { color: var(--accent); }
+
+  /* ---------- Onglets ---------- */
+  .onglets { display: inline-flex; gap: 4px; background: var(--carte); border: 1px solid var(--bord); border-radius: 999px;
+         padding: 4px; margin-top: 22px; }
+  .onglets button { border: 0; background: none; padding: 8px 16px; border-radius: 999px; font-weight: 600; color: var(--doux); cursor: pointer; }
+  .onglets button.actif { background: var(--accent); color: var(--sur-accent); }
+
+  /* ---------- Recherche et filtres ---------- */
+  .outils { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--fond) 88%, transparent);
+         backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 16px 0 10px; margin-top: 8px; }
+  .champ { position: relative; display: block; }
+  .champ svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--doux); pointer-events: none; }
+  .champ input { width: 100%; padding: 13px 14px 13px 44px; border: 1px solid var(--bord); border-radius: 14px;
+         background: var(--carte); box-shadow: var(--ombre); }
+  .champ input::placeholder { color: var(--doux); }
+  .puces { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .puces::-webkit-scrollbar { display: none; }
+  .puce { flex: none; border: 1px solid var(--bord); background: var(--carte); border-radius: 999px; padding: 7px 14px;
+         font-size: .9rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background .15s, border-color .15s; }
+  .puce:hover { border-color: var(--accent); }
+  .puce.actif { background: var(--texte); border-color: var(--texte); color: var(--fond); }
+  .puce i { font-style: normal; opacity: .6; margin-left: 5px; font-variant-numeric: tabular-nums; }
+
+  .compte { color: var(--doux); font-size: .88rem; margin: 10px 2px 12px; }
+
+  /* ---------- Cartes ---------- */
+  .carte { display: grid; grid-template-columns: 48px 1fr; gap: 14px; background: var(--carte); border: 1px solid var(--bord);
+         border-radius: 18px; padding: 18px; margin-bottom: 12px; box-shadow: var(--ombre);
+         transition: transform .15s, border-color .15s, opacity .2s; animation: arrive .35s both; }
+  .carte:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 45%, var(--bord)); }
+  .carte.vue { opacity: .62; }
+  .carte.vue:hover { opacity: 1; }
+  @keyframes arrive { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .carte { animation: none; transition: none; } html { scroll-behavior: auto; } }
+
+  .avatar { width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; color: #fff;
+         font: 800 1.15rem "Bricolage Grotesque", "Inter", sans-serif; }
+  .tete { display: flex; align-items: flex-start; gap: 10px; }
+  .tete h2 { flex: 1; font: 600 1.08rem/1.3 "Inter", sans-serif; margin: 0; }
+  .tete h2 a { color: inherit; text-decoration: none; }
+  .tete h2 a:hover { color: var(--accent); }
+  .entreprise { color: var(--doux); font-size: .93rem; margin: 2px 0 10px; }
+  .coeur { flex: none; border: 0; background: none; cursor: pointer; padding: 4px; margin: -4px; color: var(--doux); border-radius: 8px; line-height: 0; }
+  .coeur:hover, .coeur.actif { color: var(--lave); }
+  .coeur.actif svg { fill: currentColor; }
+
+  .infos { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .pastille { display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; font-weight: 500; padding: 4px 10px;
+         border-radius: 999px; background: var(--fond); border: 1px solid var(--bord); color: var(--texte); }
+  .pastille.nouveau { background: var(--lave-pale); border-color: transparent; color: var(--lave); font-weight: 600; }
+  .pastille.postule { background: var(--accent-pale); border-color: transparent; color: var(--accent); font-weight: 600; }
+  .pastille.contactee { background: var(--ambre-pale); border-color: transparent; color: var(--ambre); font-weight: 600; }
+
+  .desc { margin: 0 0 14px; font-size: .93rem; color: var(--doux);
+         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .desc.ouverte { -webkit-line-clamp: unset; }
+  .desc-lien { display: block; border: 0; background: none; padding: 0; margin: -8px 0 12px; color: var(--accent); font-size: .85rem; font-weight: 600; cursor: pointer; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 10px; padding: 8px 14px; font-size: .9rem; font-weight: 600;
+         cursor: pointer; text-decoration: none; border: 1px solid var(--bord); background: var(--carte); color: var(--texte); transition: background .15s, border-color .15s; }
+  .btn:hover { border-color: var(--accent); }
+  .btn.principal { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); }
+  .btn.principal:hover { background: var(--accent-fonce); border-color: var(--accent-fonce); }
+  .btn.coche { background: var(--accent-pale); border-color: transparent; color: var(--accent); }
+  .source { margin-left: auto; color: var(--doux); font-size: .8rem; }
+
+  .jauge { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: .88rem; color: var(--doux); }
+  .jauge .barre { flex: 0 0 110px; height: 8px; border-radius: 99px; background: var(--bord); overflow: hidden; }
+  .jauge .barre i { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+
+  .explication { color: var(--doux); font-size: .92rem; margin: 14px 2px 0; }
+
+  /* ---------- État vide ---------- */
+  .vide { text-align: center; padding: 56px 20px; background: var(--carte); border: 1px dashed var(--bord); border-radius: 18px; color: var(--doux); }
+  .vide .emoji { font-size: 2.4rem; display: block; margin-bottom: 8px; }
+  .vide b { display: block; color: var(--texte); font-size: 1.05rem; margin-bottom: 4px; }
+
+  footer { text-align: center; color: var(--doux); font-size: .82rem; padding: 0 16px 36px; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 26px 16px 70px; }
+    .chiffres { grid-template-columns: repeat(2, 1fr); }
+    .carte { grid-template-columns: 1fr; padding: 16px; }
+    .avatar { display: none; }
+    .source { width: 100%; margin: 4px 0 0; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>Ma veille emploi</h1>
-  <p class="maj" id="maj">Chargement…</p>
 
-  <div class="onglets">
+<header class="hero">
+  <div class="hero-in">
+    <p class="sur-titre">E-commerce · Puy-de-Dôme (63)</p>
+    <h1>Ma veille emploi</h1>
+    <p class="maj" id="maj">Chargement…</p>
+  </div>
+</header>
+
+<main>
+  <div class="chiffres" aria-label="Résumé">
+    <div class="chiffre"><b id="n-total">–</b><span>offres suivies</span></div>
+    <div class="chiffre nouveau"><b id="n-nouvelles">–</b><span>nouvelles (3 jours)</span></div>
+    <div class="chiffre"><b id="n-favoris">–</b><span>favoris</span></div>
+    <div class="chiffre postule"><b id="n-postule">–</b><span>candidatures</span></div>
+  </div>
+
+  <div class="onglets" hidden>
     <button id="onglet-offres" class="actif">Offres d'emploi</button>
     <button id="onglet-entreprises">Entreprises à contacter</button>
   </div>
 
+  <!-- ===== Offres ===== -->
   <section id="vue-offres">
-  <div class="barre">
-    <input id="recherche" type="search" placeholder="Rechercher (titre, entreprise, ville…)">
-    <select id="filtre">
-      <option value="toutes">Toutes les offres</option>
-      <option value="nouvelles">Nouvelles (3 derniers jours)</option>
-      <option value="a-voir">Pas encore vues</option>
-      <option value="postule">J'ai postulé</option>
-    </select>
-  </div>
-
-  <div class="compte" id="compte"></div>
-  <div id="liste"></div>
+    <div class="outils">
+      <label class="champ">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="recherche" type="search" placeholder="Rechercher un poste, une ville…" aria-label="Rechercher dans les offres">
+      </label>
+      <div class="puces" id="puces" role="group" aria-label="Filtrer les offres"></div>
+    </div>
+    <div class="compte" id="compte" aria-live="polite"></div>
+    <div id="liste"></div>
   </section>
 
+  <!-- ===== Entreprises ===== -->
   <section id="vue-entreprises" hidden>
-    <p class="explication">Ces entreprises du Puy-de-Dôme ont de fortes chances d'embaucher dans ton métier,
-      même sans annonce publiée (source : La Bonne Boite, France Travail). Idéal pour une candidature spontanée.</p>
-    <div class="barre">
-      <input id="recherche-ent" type="search" placeholder="Rechercher (nom, ville, secteur…)">
-      <select id="filtre-ent">
-        <option value="toutes">Toutes les entreprises</option>
-        <option value="a-faire">Pas encore contactées</option>
-        <option value="contactee">Déjà contactées</option>
-      </select>
+    <p class="explication">Ces entreprises du Puy-de-Dôme ont de fortes chances d'embaucher dans ton métier, même sans annonce publiée
+      (source : La Bonne Boite, France Travail). Idéal pour une candidature spontanée.</p>
+    <div class="outils">
+      <label class="champ">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="recherche-ent" type="search" placeholder="Rechercher une entreprise…" aria-label="Rechercher dans les entreprises">
+      </label>
+      <div class="puces" id="puces-ent" role="group" aria-label="Filtrer les entreprises"></div>
     </div>
-    <div class="compte" id="compte-ent"></div>
+    <div class="compte" id="compte-ent" aria-live="polite"></div>
     <div id="liste-ent"></div>
   </section>
 </main>
 
+<footer>Offres fournies par France Travail · mise à jour automatique chaque matin · tes favoris et candidatures restent dans ce navigateur</footer>
+
 <script>
-  // Tes marques "vue" / "postulé" sont gardées dans ton navigateur (pas sur GitHub).
-  function lireStatuts() {
-    try { return JSON.parse(localStorage.getItem("statuts") || "{}"); } catch (e) { return {}; }
-  }
-  function sauverStatuts(s) {
-    try { localStorage.setItem("statuts", JSON.stringify(s)); } catch (e) {}
-  }
+  // ------------------------------------------------------------------
+  // Tes marques (favori, vue, postulé) sont gardées dans ton navigateur.
+  // ------------------------------------------------------------------
+  function lireStatuts() { try { return JSON.parse(localStorage.getItem("statuts") || "{}"); } catch (e) { return {}; } }
+  function sauverStatuts() { try { localStorage.setItem("statuts", JSON.stringify(statuts)); } catch (e) {} }
 
-  let offres = [];
+  let offres = [], entreprises = [];
   let statuts = lireStatuts();
+  let filtre = "toutes", filtreEnt = "toutes";
 
-  function echapper(t) {
-    const d = document.createElement("div"); d.textContent = t || ""; return d.innerHTML;
+  // ------------------------------ Petits outils ------------------------------
+  const $ = id => document.getElementById(id);
+  function echapper(t) { const d = document.createElement("div"); d.textContent = t == null ? "" : t; return d.innerHTML; }
+  function pluriel(n, mot) { return `${n} ${mot}${n > 1 ? "s" : ""}`; }
+  function joursDepuis(iso) { return iso ? Math.floor((Date.now() - new Date(iso + "T00:00:00").getTime()) / 864e5) : null; }
+  function estNouvelle(o) { const j = joursDepuis(o.ajoutee_le); return j !== null && j < 3; }
+  function dateFr(iso) { if (!iso) return ""; const [a, m, j] = iso.split("-"); return `${j}/${m}/${a}`; }
+  function dateRelative(iso) {
+    const j = joursDepuis(iso);
+    if (j === null) return "";
+    if (j <= 0) return "aujourd'hui";
+    if (j === 1) return "hier";
+    if (j < 7) return `il y a ${j} jours`;
+    if (j < 14) return "il y a 1 semaine";
+    if (j < 31) return `il y a ${Math.floor(j / 7)} semaines`;
+    return "le " + dateFr(iso);
   }
-  function dateFr(iso) {
-    if (!iso) return "";
-    const [a, m, j] = iso.split("-"); return `${j}/${m}/${a}`;
+  // "63 - CLERMONT FERRAND" devient "Clermont Ferrand"
+  function lieuPropre(l) {
+    return (l || "").replace(/^\d{2,3}\s*-\s*/, "").toLowerCase().replace(/(^|[\s\-'])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
   }
-  function estNouvelle(o) {
-    return (Date.now() - new Date(o.ajoutee_le).getTime()) < 3 * 24 * 3600 * 1000;
+  // Une couleur stable par entreprise, pour son avatar
+  const COULEURS = ["#1f6f54", "#d9532b", "#3d5a99", "#8a4f9e", "#b0812a", "#2a8a96", "#b04a6a", "#5b7a2e"];
+  function avatar(nom) {
+    const n = (nom || "?").trim() || "?";
+    let h = 0; for (const c of n) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    const inconnu = /non précisée/i.test(n);
+    return `<div class="avatar" style="background:${inconnu ? "#8b877e" : COULEURS[h % COULEURS.length]}" aria-hidden="true">${inconnu ? "?" : echapper(n[0].toUpperCase())}</div>`;
   }
+  const ICONES = {
+    lieu: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-6.2 7-11.5a7 7 0 1 0-14 0C5 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+    contrat: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>',
+    date: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    coeur: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.600-7.5 10.2-7.5 10.2Z"/></svg>',
+    lien: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg>',
+  };
+  function vide(emoji, titre, texte) { return `<div class="vide"><span class="emoji">${emoji}</span><b>${titre}</b>${texte}</div>`; }
+  function dessinerPuces(zone, liste, actif, choisir) {
+    zone.innerHTML = liste.map(([cle, nom, n]) =>
+      `<button class="puce ${cle === actif ? "actif" : ""}" data-cle="${cle}" aria-pressed="${cle === actif}">${nom}<i>${n}</i></button>`).join("");
+    zone.querySelectorAll(".puce").forEach(b => b.onclick = () => choisir(b.dataset.cle));
+  }
+
+  // ------------------------------ Offres ------------------------------
+  function st(o) { return statuts[o.lien] || {}; }
 
   function afficher() {
-    const q = document.getElementById("recherche").value.toLowerCase().trim();
-    const filtre = document.getElementById("filtre").value;
+    const q = $("recherche").value.toLowerCase().trim();
+    const compte = {
+      toutes: offres.length,
+      nouvelles: offres.filter(estNouvelle).length,
+      "a-voir": offres.filter(o => !st(o).vue && !st(o).postule).length,
+      favoris: offres.filter(o => st(o).favori).length,
+      postule: offres.filter(o => st(o).postule).length,
+    };
+    $("n-total").textContent = compte.toutes;
+    $("n-nouvelles").textContent = compte.nouvelles;
+    $("n-favoris").textContent = compte.favoris;
+    $("n-postule").textContent = compte.postule;
+
+    dessinerPuces($("puces"), [
+      ["toutes", "Toutes", compte.toutes], ["nouvelles", "Nouvelles", compte.nouvelles], ["a-voir", "À voir", compte["a-voir"]],
+      ["favoris", "Favoris", compte.favoris], ["postule", "Postulé", compte.postule],
+    ], filtre, cle => { filtre = cle; afficher(); });
 
     const visibles = offres.filter(o => {
-      const st = statuts[o.lien] || {};
+      const s = st(o);
       if (filtre === "nouvelles" && !estNouvelle(o)) return false;
-      if (filtre === "a-voir" && st.vue) return false;
-      if (filtre === "postule" && !st.postule) return false;
-      if (q && !(o.titre + " " + o.entreprise + " " + o.lieu + " " + o.description).toLowerCase().includes(q)) return false;
-      return true;
+      if (filtre === "a-voir" && (s.vue || s.postule)) return false;
+      if (filtre === "favoris" && !s.favori) return false;
+      if (filtre === "postule" && !s.postule) return false;
+      return !q || (o.titre + " " + o.entreprise + " " + o.lieu + " " + o.description + " " + o.contrat).toLowerCase().includes(q);
     });
 
-    document.getElementById("compte").textContent =
-      `${visibles.length} offre${visibles.length > 1 ? "s" : ""} affichée${visibles.length > 1 ? "s" : ""}`;
-
-    const liste = document.getElementById("liste");
+    $("compte").textContent = offres.length ? pluriel(visibles.length, "offre") + (visibles.length > 1 ? " affichées" : " affichée") : "";
+    const liste = $("liste");
     if (!visibles.length) {
-      liste.innerHTML = `<p class="vide">${offres.length ? "Aucune offre ne correspond à ce filtre." :
-        "Pas encore d'offres. Le robot passe chaque matin — ou lance-le à la main depuis l'onglet Actions."}</p>`;
+      liste.innerHTML = !offres.length
+        ? vide("🌋", "Pas encore d'offres", "Le robot passe chaque matin : reviens demain, ou lance-le depuis l'onglet Actions de GitHub.")
+        : q ? vide("🔍", "Aucun résultat", `Aucune offre ne contient « ${echapper(q)} ».`)
+        : vide("✨", "Rien dans cette catégorie", "Change de filtre pour voir les autres offres.");
       return;
     }
 
     liste.innerHTML = visibles.map((o, i) => {
-      const st = statuts[o.lien] || {};
+      const s = st(o);
       return `
-      <article class="offre ${st.vue && !st.postule ? "vue" : ""}">
-        <h2>
-          ${estNouvelle(o) ? '<span class="badge b-nouveau">Nouveau</span>' : ""}
-          ${st.postule ? '<span class="badge b-postule">Postulé</span>' : ""}
-          <a href="${echapper(o.lien)}" target="_blank" rel="noopener" data-i="${i}" class="lien">${echapper(o.titre)}</a>
-        </h2>
-        <div class="infos">
-          ${echapper(o.entreprise)}${o.lieu ? " · " + echapper(o.lieu) : ""}${o.contrat ? " · " + echapper(o.contrat) : ""}
-          ${o.salaire_min ? " · dès " + Math.round(o.salaire_min).toLocaleString("fr-FR") + " €" : ""}
-        </div>
-        <p class="desc">${echapper(o.description)}</p>
-        <div class="infos actions">
-          <button data-i="${i}" data-action="vue" class="${st.vue ? "actif" : ""}">${st.vue ? "✓ Vue" : "Marquer vue"}</button>
-          <button data-i="${i}" data-action="postule" class="${st.postule ? "actif" : ""}">${st.postule ? "✓ Postulé" : "J'ai postulé"}</button>
-          <span>Publiée le ${dateFr(o.publiee_le)} · ${echapper(o.source)}</span>
+      <article class="carte ${s.vue && !s.postule && !s.favori ? "vue" : ""}" style="animation-delay:${Math.min(i, 8) * 40}ms">
+        ${avatar(o.entreprise)}
+        <div>
+          <div class="tete">
+            <h2><a href="${echapper(o.lien)}" target="_blank" rel="noopener" data-i="${i}" class="titre">${echapper(o.titre)}</a></h2>
+            <button class="coeur ${s.favori ? "actif" : ""}" data-i="${i}" data-action="favori" aria-pressed="${!!s.favori}"
+              aria-label="${s.favori ? "Retirer des favoris" : "Ajouter aux favoris"}" title="${s.favori ? "Retirer des favoris" : "Ajouter aux favoris"}">${ICONES.coeur}</button>
+          </div>
+          <p class="entreprise">${echapper(o.entreprise)}</p>
+          <div class="infos">
+            ${estNouvelle(o) ? '<span class="pastille nouveau">● Nouveau</span>' : ""}
+            ${s.postule ? '<span class="pastille postule">✓ Postulé</span>' : ""}
+            ${o.lieu ? `<span class="pastille">${ICONES.lieu}${echapper(lieuPropre(o.lieu))}</span>` : ""}
+            ${o.contrat ? `<span class="pastille">${ICONES.contrat}${echapper(o.contrat)}</span>` : ""}
+            ${o.publiee_le ? `<span class="pastille" title="Publiée le ${dateFr(o.publiee_le)}">${ICONES.date}${dateRelative(o.publiee_le)}</span>` : ""}
+            ${o.salaire_min ? `<span class="pastille">dès ${Math.round(o.salaire_min).toLocaleString("fr-FR")} €</span>` : ""}
+          </div>
+          ${o.description ? `<p class="desc" id="desc-${i}">${echapper(o.description)}</p>
+          ${o.description.length > 170 ? `<button class="desc-lien" data-desc="${i}" aria-expanded="false">Lire la suite</button>` : ""}` : ""}
+          <div class="actions">
+            <a class="btn principal titre" href="${echapper(o.lien)}" target="_blank" rel="noopener" data-i="${i}">Voir l'offre ${ICONES.lien}</a>
+            <button class="btn ${s.postule ? "coche" : ""}" data-i="${i}" data-action="postule" aria-pressed="${!!s.postule}">${s.postule ? "✓ Candidature envoyée" : "J'ai postulé"}</button>
+            <button class="btn ${s.vue ? "coche" : ""}" data-i="${i}" data-action="vue" aria-pressed="${!!s.vue}">${s.vue ? "✓ Vue" : "Marquer vue"}</button>
+            <span class="source">${echapper(o.source)}</span>
+          </div>
         </div>
       </article>`;
     }).join("");
 
     liste.querySelectorAll("button[data-action]").forEach(b => b.onclick = () => {
-      const o = visibles[b.dataset.i];
-      const st = statuts[o.lien] = statuts[o.lien] || {};
-      st[b.dataset.action] = !st[b.dataset.action];
-      if (b.dataset.action === "postule" && st.postule) st.vue = true;
-      sauverStatuts(statuts); afficher();
+      const o = visibles[b.dataset.i], a = b.dataset.action;
+      const s = statuts[o.lien] = statuts[o.lien] || {};
+      s[a] = !s[a];
+      if (a === "postule" && s.postule) s.vue = true;
+      sauverStatuts(); afficher();
     });
-    liste.querySelectorAll("a.lien").forEach(a => a.addEventListener("click", () => {
+    liste.querySelectorAll("a.titre").forEach(a => a.addEventListener("click", () => {
       const o = visibles[a.dataset.i];
       statuts[o.lien] = { ...(statuts[o.lien] || {}), vue: true };
-      sauverStatuts(statuts); setTimeout(afficher, 300);
+      sauverStatuts(); setTimeout(afficher, 400);
     }));
+    liste.querySelectorAll("button[data-desc]").forEach(b => b.onclick = () => {
+      const ouverte = $("desc-" + b.dataset.desc).classList.toggle("ouverte");
+      b.textContent = ouverte ? "Réduire" : "Lire la suite";
+      b.setAttribute("aria-expanded", ouverte);
+    });
   }
 
-  fetch("offres.json?v=" + Date.now())
-    .then(r => r.json())
-    .then(d => {
-      offres = d.offres || [];
-      document.getElementById("maj").textContent =
-        d.mise_a_jour ? `Dernière collecte : ${dateFr(d.mise_a_jour)} · ${offres.length} offres au total` : "Aucune collecte pour l'instant";
-      afficher();
-    })
-    .catch(() => { document.getElementById("maj").textContent = "Impossible de charger les offres."; });
-
-  // ----- Onglet "Entreprises à contacter" -----
-  let entreprises = [];
-
+  // ------------------------------ Entreprises ------------------------------
   function afficherEntreprises() {
-    const q = document.getElementById("recherche-ent").value.toLowerCase().trim();
-    const filtre = document.getElementById("filtre-ent").value;
-    const visibles = entreprises.filter(e => {
-      const st = statuts["ent:" + e.siret] || {};
-      if (filtre === "a-faire" && st.contactee) return false;
-      if (filtre === "contactee" && !st.contactee) return false;
-      if (q && !(e.nom + " " + e.ville + " " + e.secteur).toLowerCase().includes(q)) return false;
-      return true;
-    });
-    document.getElementById("compte-ent").textContent =
-      `${visibles.length} entreprise${visibles.length > 1 ? "s" : ""} affichée${visibles.length > 1 ? "s" : ""}`;
+    const q = $("recherche-ent").value.toLowerCase().trim();
+    const contactee = e => (statuts["ent:" + e.siret] || {}).contactee;
+    dessinerPuces($("puces-ent"), [
+      ["toutes", "Toutes", entreprises.length],
+      ["a-faire", "À contacter", entreprises.filter(e => !contactee(e)).length],
+      ["contactee", "Contactées", entreprises.filter(contactee).length],
+    ], filtreEnt, cle => { filtreEnt = cle; afficherEntreprises(); });
 
-    const liste = document.getElementById("liste-ent");
-    if (!visibles.length) {
-      liste.innerHTML = `<p class="vide">${entreprises.length ? "Aucune entreprise ne correspond à ce filtre." :
-        "Pas encore d'entreprises. Elles apparaîtront après la prochaine collecte."}</p>`;
-      return;
-    }
+    const visibles = entreprises.filter(e => {
+      if (filtreEnt === "a-faire" && contactee(e)) return false;
+      if (filtreEnt === "contactee" && !contactee(e)) return false;
+      return !q || (e.nom + " " + e.ville + " " + e.secteur).toLowerCase().includes(q);
+    });
+    $("compte-ent").textContent = pluriel(visibles.length, "entreprise") + (visibles.length > 1 ? " affichées" : " affichée");
+
+    const liste = $("liste-ent");
+    if (!visibles.length) { liste.innerHTML = vide("🏢", "Aucune entreprise", "Change de filtre ou de recherche."); return; }
     liste.innerHTML = visibles.map((e, i) => {
-      const st = statuts["ent:" + e.siret] || {};
+      const c = contactee(e);
       const pot = Math.max(0, Math.min(100, Math.round(e.potentiel || 0)));
-      const effectif = e.effectif_min
-        ? ` · ${e.effectif_min}${e.effectif_max && e.effectif_max !== e.effectif_min ? " à " + e.effectif_max : "+"} salariés` : "";
+      const effectif = e.effectif_min ? `${e.effectif_min}${e.effectif_max && e.effectif_max !== e.effectif_min ? " à " + e.effectif_max : "+"} salariés` : "";
       const recherche = "https://www.google.com/search?q=" + encodeURIComponent(e.nom + " " + e.ville + " recrutement");
       return `
-      <article class="offre ${st.contactee ? "vue" : ""}">
-        <h2>${st.contactee ? '<span class="badge b-postule">Contactée</span>' : ""}
-          <a href="${echapper(e.lien)}" target="_blank" rel="noopener">${echapper(e.nom)}</a></h2>
-        <div class="infos">${echapper(e.ville)}${e.code_postal ? " (" + echapper(e.code_postal) + ")" : ""}${
-          e.secteur ? " · " + echapper(e.secteur) : ""}${effectif}</div>
-        <p class="desc"><span class="potentiel"><i style="width:${pot}%"></i></span>Potentiel d'embauche : ${pot} / 100</p>
-        <div class="infos actions">
-          <button data-i="${i}" class="${st.contactee ? "actif" : ""}">${st.contactee ? "✓ Contactée" : "Marquer contactée"}</button>
-          <a href="${recherche}" target="_blank" rel="noopener">Chercher leur page recrutement</a>
+      <article class="carte ${c ? "vue" : ""}" style="animation-delay:${Math.min(i, 8) * 40}ms">
+        ${avatar(e.nom)}
+        <div>
+          <div class="tete"><h2><a href="${echapper(e.lien)}" target="_blank" rel="noopener">${echapper(e.nom)}</a></h2></div>
+          <p class="entreprise">${echapper(e.secteur)}</p>
+          <div class="infos">
+            ${c ? '<span class="pastille contactee">✓ Contactée</span>' : ""}
+            <span class="pastille">${ICONES.lieu}${echapper(e.ville)}${e.code_postal ? " (" + echapper(e.code_postal) + ")" : ""}</span>
+            ${effectif ? `<span class="pastille">${effectif}</span>` : ""}
+          </div>
+          <div class="jauge"><div class="barre"><i style="width:${pot}%"></i></div>Potentiel d'embauche : ${pot} / 100</div>
+          <div class="actions">
+            <a class="btn principal" href="${recherche}" target="_blank" rel="noopener">Trouver leur page recrutement ${ICONES.lien}</a>
+            <button class="btn ${c ? "coche" : ""}" data-i="${i}" aria-pressed="${!!c}">${c ? "✓ Contactée" : "Marquer contactée"}</button>
+          </div>
         </div>
       </article>`;
     }).join("");
     liste.querySelectorAll("button[data-i]").forEach(b => b.onclick = () => {
       const cle = "ent:" + visibles[b.dataset.i].siret;
       statuts[cle] = { contactee: !(statuts[cle] || {}).contactee };
-      sauverStatuts(statuts); afficherEntreprises();
+      sauverStatuts(); afficherEntreprises();
     });
-  }
-
-  fetch("entreprises.json?v=" + Date.now())
-    .then(r => r.json())
-    .then(d => { entreprises = d.entreprises || []; afficherEntreprises(); masquerOngletsSiInutile(); })
-    .catch(() => { afficherEntreprises(); masquerOngletsSiInutile(); });
-
-  // S'il n'y a aucune entreprise (La Bonne Boite désactivée), on cache les onglets
-  function masquerOngletsSiInutile() {
-    document.querySelector(".onglets").hidden = entreprises.length === 0;
   }
 
   function choisirOnglet(nom) {
     for (const n of ["offres", "entreprises"]) {
-      document.getElementById("vue-" + n).hidden = n !== nom;
-      document.getElementById("onglet-" + n).classList.toggle("actif", n === nom);
+      $("vue-" + n).hidden = n !== nom;
+      $("onglet-" + n).classList.toggle("actif", n === nom);
     }
   }
-  document.getElementById("onglet-offres").onclick = () => choisirOnglet("offres");
-  document.getElementById("onglet-entreprises").onclick = () => choisirOnglet("entreprises");
-  document.getElementById("recherche-ent").oninput = afficherEntreprises;
-  document.getElementById("filtre-ent").onchange = afficherEntreprises;
 
-  document.getElementById("recherche").oninput = afficher;
-  document.getElementById("filtre").onchange = afficher;
+  // ------------------------------ Démarrage ------------------------------
+  fetch("offres.json?v=" + Date.now()).then(r => r.json()).then(d => {
+    offres = d.offres || [];
+    $("maj").innerHTML = d.mise_a_jour
+      ? `<span class="point"></span>Dernière collecte ${dateRelative(d.mise_a_jour)} · prochaine demain matin`
+      : "Aucune collecte pour l'instant";
+    afficher();
+  }).catch(() => { $("maj").textContent = "Impossible de charger les offres."; afficher(); });
+
+  fetch("entreprises.json?v=" + Date.now()).then(r => r.json()).then(d => {
+    entreprises = d.entreprises || [];
+    document.querySelector(".onglets").hidden = entreprises.length === 0;   // onglets cachés s'il n'y a pas d'entreprises
+    if (entreprises.length) afficherEntreprises();
+  }).catch(() => {});
+
+  $("onglet-offres").onclick = () => choisirOnglet("offres");
+  $("onglet-entreprises").onclick = () => choisirOnglet("entreprises");
+  $("recherche").oninput = afficher;
+  $("recherche-ent").oninput = afficherEntreprises;
 </script>
 </body>
 </html>
