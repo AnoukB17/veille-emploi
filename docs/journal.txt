@@ -1,63 +1,8 @@
 Collecte du 16/11/2026 à 13:07 UTC
 
    (champs reçus : city, citycode, company_name, department, department_number, email, headcount_max, headcount_min, hiring_potential, id, is_high_potential, location, naf, naf_label, office_name, postcode, region, rome, siret)
-✅ La Bonne Boite, « chef de projet e-commerce » : 10 entreprises reçues, dont 7 dans le département
-   total annoncé : 10 · codes ROME : {'F1140': 7}
-   exemples : MEUBLES IKEA FRANCE (Commerce de détail de meubles) ; NEOMARCHE (Commerce de détail de meubles) ; BUT INTERNATIONAL (Commerce de détail de meubles) ; CONFORAMA FRANCE (Commerce de détail de meubles) ; ENTREPRISE RAYMOND ESPINASSE ET FILS (Travaux de menuiserie bois et PVC) ; SOCIETE INTERNATIONALE DE CONFORT AMEUBL (Commerce de détail de meubles)
 ✅ La Bonne Boite, « responsable e-commerce » : 39 entreprises reçues, dont 29 dans le département
-   total annoncé : 39 · codes ROME : {'M1704': 26, 'M1101': 3}
-   exemples : FOUNDEVER FRANCE (Activités de centres d'appels) ; TESSI DOCUMENTS SERVICES CENTRE DE RELAT (Activités de centres d'appels) ; BOULANGER (Commerce de détail d'appareils électroménagers en magasin spécialisé) ; LEROY MERLIN FRANCE (Commerce de détail de quincaillerie, peintures et verres en grandes surfaces (400 m2et plus)) ; SERINOX SN (Construction de locomotives et d'autre matériel ferroviaire roulant) ; NSE (Fabrication de cartes électroniques assemblées)
-✅ La Bonne Boite, « chargé de projet e-commerce » : 35 entreprises reçues, dont 26 dans le département
-   total annoncé : 35 · codes ROME : {'M1704': 26}
-   exemples : FOUNDEVER FRANCE (Activités de centres d'appels) ; TESSI DOCUMENTS SERVICES CENTRE DE RELAT (Activités de centres d'appels) ; BOULANGER (Commerce de détail d'appareils électroménagers en magasin spécialisé) ; LEROY MERLIN FRANCE (Commerce de détail de quincaillerie, peintures et verres en grandes surfaces (400 m2et plus)) ; TECNOMAT (Commerce de détail de quincaillerie, peintures et verres en grandes surfaces (400 m2et plus)) ; JADAMIC (Commerce de détail de quincaillerie, peintures et verres en grandes surfaces (400 m2et plus))
-✅ La Bonne Boite, « chef de projet web » : 9 entreprises reçues, dont 8 dans le département
-   total annoncé : 9 · codes ROME : {'F1135': 8}
-   exemples : ENEDIS (Distribution d'électricité) ; AUVERGNE PRODUCTIQUE INGENIERIE (Travaux d'installation électrique dans tous locaux) ; SNEF (Travaux d'installation électrique dans tous locaux) ; INEO RHONE ALPES AUVERGNE (Travaux d'installation électrique dans tous locaux) ; ENSIO EST (Travaux d'installation électrique dans tous locaux) ; ENEDIS (Distribution d'électricité)
-✅ La Bonne Boite, « chef de projet digital » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « marketing digital » : 1 entreprises reçues, dont 1 dans le département
-   total annoncé : 1 · codes ROME : {'E1112': 1}
-   exemples : SOCIETE NATIONALE DE RADIODIFFUSION RADI (Édition et diffusion de programmes radio)
-✅ La Bonne Boite, « webmarketeur » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « community manager » : 1 entreprises reçues, dont 1 dans le département
-   total annoncé : 1 · codes ROME : {'H1102': 1}
-   exemples : CAPPERS (Fabrication d'équipements hydrauliques et pneumatiques)
-✅ La Bonne Boite, « traffic manager » : 1 entreprises reçues, dont 1 dans le département
-   total annoncé : 1 · codes ROME : {'H1102': 1}
-   exemples : CAPPERS (Fabrication d'équipements hydrauliques et pneumatiques)
-✅ La Bonne Boite, « chef de produit web » : 6 entreprises reçues, dont 6 dans le département
-   total annoncé : 6 · codes ROME : {'H1204': 6}
-   exemples : MEUBLES IKEA FRANCE (Commerce de détail de meubles) ; NEOMARCHE (Commerce de détail de meubles) ; BUT INTERNATIONAL (Commerce de détail de meubles) ; CONFORAMA FRANCE (Commerce de détail de meubles) ; SOCIETE INTERNATIONALE DE CONFORT AMEUBL (Commerce de détail de meubles) ; CBS (Commerce de détail de meubles)
-✅ La Bonne Boite, « webmaster » : 7 entreprises reçues, dont 5 dans le département
-   total annoncé : 7 · codes ROME : {'M1855': 5}
-   exemples : CEGI ALFA (Edition de logiciels applicatifs) ; TEAM-IT (Autres activités informatiques) ; SOPRA STERIA GROUP (Conseil en systèmes et logiciels informatiques) ; SPIE ICS (Tierce maintenance de systèmes et d’applications informatiques) ; CELAD (Conseil en systèmes et logiciels informatiques)
 ✅ La Bonne Boite, « M1707 » : 8 entreprises reçues, dont 6 dans le département
-   total annoncé : 8 · codes ROME : {'M1707': 6}
-   exemples : AVEM (Réparation d'ordinateurs et d'équipements périphériques) ; CEGI ALFA (Edition de logiciels applicatifs) ; COMPAGNIE D'EXPLOITATION ET DE REPARTITI (Commerce de gros (commerce interentreprises) de produits pharmaceutiques) ; DANSNOSCOEURS (Régie publicitaire de médias) ; SPIE ICS (Tierce maintenance de systèmes et d’applications informatiques) ; N2P DISTRIBUTION (Commerce de gros (commerce interentreprises) de produits pharmaceutiques)
-✅ La Bonne Boite, « M1705 » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « E1101 » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « E1104 » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « M1803 » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « M1806 » : 6 entreprises reçues, dont 3 dans le département
-   total annoncé : 6 · codes ROME : {'M1806': 3}
-   exemples : AVEM (Réparation d'ordinateurs et d'équipements périphériques) ; SOPRA STERIA GROUP (Conseil en systèmes et logiciels informatiques) ; CELAD (Conseil en systèmes et logiciels informatiques)
-✅ La Bonne Boite, « E1402 » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-✅ La Bonne Boite, « M1703 » : 0 entreprises reçues, dont 0 dans le département
-   total annoncé : 0 · codes ROME : {}
-   exemples : 
-🏢 55 entreprise(s) à fort potentiel d'embauche dans docs/entreprises.json
+🏢 35 entreprise(s) à fort potentiel d'embauche dans docs/entreprises.json
 🔎 0 offres collectées, 0 correspondent à tes critères
 ✨ 0 nouvelle(s) offre(s) — 0 au total dans docs/offres.json

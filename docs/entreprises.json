@@ -2,32 +2,6 @@
  "mise_a_jour": "2026-11-16",
  "entreprises": [
   {
-   "nom": "FOUNDEVER FRANCE",
-   "ville": "Cournon-d'Auvergne",
-   "code_postal": "63800",
-   "secteur": "Activités de centres d'appels",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 57.5820291584,
-   "siret": "38965255300162",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/38965255300162",
-   "metier": "responsable e-commerce",
-   "code_rome": "M1704"
-  },
-  {
-   "nom": "CEGI ALFA",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Edition de logiciels applicatifs",
-   "effectif_min": 200,
-   "effectif_max": 249,
-   "potentiel": 40.8913147275,
-   "siret": "31996014200077",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/31996014200077",
-   "metier": "webmaster",
-   "code_rome": "M1855"
-  },
-  {
    "nom": "AVEM",
    "ville": "Clermont-Ferrand",
    "code_postal": "63000",
@@ -39,6 +13,84 @@
    "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/33044723600663",
    "metier": "M1707",
    "code_rome": "M1707"
+  },
+  {
+   "nom": "CEGI ALFA",
+   "ville": "Clermont-Ferrand",
+   "code_postal": "63100",
+   "secteur": "Edition de logiciels applicatifs",
+   "effectif_min": 200,
+   "effectif_max": 249,
+   "potentiel": 14.945071088999997,
+   "siret": "31996014200077",
+   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/31996014200077",
+   "metier": "M1707",
+   "code_rome": "M1707"
+  },
+  {
+   "nom": "COMPAGNIE D'EXPLOITATION ET DE REPARTITI",
+   "ville": "Cébazat",
+   "code_postal": "63118",
+   "secteur": "Commerce de gros (commerce interentreprises) de produits pharmaceutiques",
+   "effectif_min": 0,
+   "effectif_max": 0,
+   "potentiel": 3.3362607484500004,
+   "siret": "49326528400577",
+   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/49326528400577",
+   "metier": "M1707",
+   "code_rome": "M1707"
+  },
+  {
+   "nom": "N2P DISTRIBUTION",
+   "ville": "Clermont-Ferrand",
+   "code_postal": "63100",
+   "secteur": "Commerce de gros (commerce interentreprises) de produits pharmaceutiques",
+   "effectif_min": 20,
+   "effectif_max": 49,
+   "potentiel": 2.3166068418000005,
+   "siret": "75094012400035",
+   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/75094012400035",
+   "metier": "M1707",
+   "code_rome": "M1707"
+  },
+  {
+   "nom": "DANSNOSCOEURS",
+   "ville": "Clermont-Ferrand",
+   "code_postal": "63100",
+   "secteur": "Régie publicitaire de médias",
+   "effectif_min": 6,
+   "effectif_max": 9,
+   "potentiel": 1.9154725856500001,
+   "siret": "51783344800049",
+   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/51783344800049",
+   "metier": "M1707",
+   "code_rome": "M1707"
+  },
+  {
+   "nom": "SPIE ICS",
+   "ville": "Cébazat",
+   "code_postal": "63118",
+   "secteur": "Tierce maintenance de systèmes et d’applications informatiques",
+   "effectif_min": 10,
+   "effectif_max": 19,
+   "potentiel": 1.6579789375,
+   "siret": "32410382900804",
+   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/32410382900804",
+   "metier": "M1707",
+   "code_rome": "M1707"
+  },
+  {
+   "nom": "FOUNDEVER FRANCE",
+   "ville": "Cournon-d'Auvergne",
+   "code_postal": "63800",
+   "secteur": "Activités de centres d'appels",
+   "effectif_min": 0,
+   "effectif_max": 0,
+   "potentiel": 57.5820291584,
+   "siret": "38965255300162",
+   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/38965255300162",
+   "metier": "responsable e-commerce",
+   "code_rome": "M1704"
   },
   {
    "nom": "TESSI DOCUMENTS SERVICES CENTRE DE RELAT",
@@ -67,19 +119,6 @@
    "code_rome": "M1704"
   },
   {
-   "nom": "MEUBLES IKEA FRANCE",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Commerce de détail de meubles",
-   "effectif_min": 200,
-   "effectif_max": 249,
-   "potentiel": 15.873066085500001,
-   "siret": "35174572400358",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/35174572400358",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
-  },
-  {
    "nom": "SYNY",
    "ville": "Mont-Dore",
    "code_postal": "63240",
@@ -106,19 +145,6 @@
    "code_rome": "M1704"
   },
   {
-   "nom": "ENEDIS",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Distribution d'électricité",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 14.05364481885,
-   "siret": "44460844215289",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/44460844215289",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
    "nom": "ADOPT PARFUMS",
    "ville": "Clermont-Ferrand",
    "code_postal": "63000",
@@ -143,19 +169,6 @@
    "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/89534444800074",
    "metier": "responsable e-commerce",
    "code_rome": "M1704"
-  },
-  {
-   "nom": "SOPRA STERIA GROUP",
-   "ville": "Aubière",
-   "code_postal": "63170",
-   "secteur": "Conseil en systèmes et logiciels informatiques",
-   "effectif_min": 100,
-   "effectif_max": 199,
-   "potentiel": 10.91884571205,
-   "siret": "32682006500646",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/32682006500646",
-   "metier": "webmaster",
-   "code_rome": "M1855"
   },
   {
    "nom": "NATURE ET DECOUVERTES SA",
@@ -221,32 +234,6 @@
    "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/30337658601315",
    "metier": "responsable e-commerce",
    "code_rome": "M1704"
-  },
-  {
-   "nom": "TEAM-IT",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Autres activités informatiques",
-   "effectif_min": 6,
-   "effectif_max": 9,
-   "potentiel": 7.633411029400001,
-   "siret": "80763546100070",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/80763546100070",
-   "metier": "webmaster",
-   "code_rome": "M1855"
-  },
-  {
-   "nom": "SOCIETE NATIONALE DE RADIODIFFUSION RADI",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63000",
-   "secteur": "Édition et diffusion de programmes radio",
-   "effectif_min": 20,
-   "effectif_max": 49,
-   "potentiel": 7.434782492850001,
-   "siret": "32609447100462",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/32609447100462",
-   "metier": "marketing digital",
-   "code_rome": "E1112"
   },
   {
    "nom": "TECNOMAT",
@@ -327,19 +314,6 @@
    "code_rome": "M1704"
   },
   {
-   "nom": "CELAD",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63000",
-   "secteur": "Conseil en systèmes et logiciels informatiques",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 4.7850918701500005,
-   "siret": "38783703200227",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/38783703200227",
-   "metier": "webmaster",
-   "code_rome": "M1855"
-  },
-  {
    "nom": "BANQUE CHALUS",
    "ville": "Riom",
    "code_postal": "63200",
@@ -364,19 +338,6 @@
    "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/48902451300041",
    "metier": "responsable e-commerce",
    "code_rome": "M1704"
-  },
-  {
-   "nom": "ENEDIS",
-   "ville": "Romagnat",
-   "code_postal": "63540",
-   "secteur": "Distribution d'électricité",
-   "effectif_min": 50,
-   "effectif_max": 99,
-   "potentiel": 3.8111225996999996,
-   "siret": "44460844203392",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/44460844203392",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
   },
   {
    "nom": "NSE",
@@ -405,32 +366,6 @@
    "code_rome": "M1101"
   },
   {
-   "nom": "CAPPERS",
-   "ville": "Lezoux",
-   "code_postal": "63190",
-   "secteur": "Fabrication d'équipements hydrauliques et pneumatiques",
-   "effectif_min": 10,
-   "effectif_max": 19,
-   "potentiel": 3.50683152745,
-   "siret": "49873933300041",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/49873933300041",
-   "metier": "community manager",
-   "code_rome": "H1102"
-  },
-  {
-   "nom": "COMPAGNIE D'EXPLOITATION ET DE REPARTITI",
-   "ville": "Cébazat",
-   "code_postal": "63118",
-   "secteur": "Commerce de gros (commerce interentreprises) de produits pharmaceutiques",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 3.3362607484500004,
-   "siret": "49326528400577",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/49326528400577",
-   "metier": "M1707",
-   "code_rome": "M1707"
-  },
-  {
    "nom": "SOCIETE GENERALE",
    "ville": "Clermont-Ferrand",
    "code_postal": "63000",
@@ -444,19 +379,6 @@
    "code_rome": "M1704"
   },
   {
-   "nom": "NEOMARCHE",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Commerce de détail de meubles",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 3.3359080189500006,
-   "siret": "84449420300236",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/84449420300236",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
-  },
-  {
    "nom": "VORWERK FRANCE",
    "ville": "Clermont-Ferrand",
    "code_postal": "63100",
@@ -468,32 +390,6 @@
    "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/62202877702453",
    "metier": "responsable e-commerce",
    "code_rome": "M1704"
-  },
-  {
-   "nom": "ENTREPRISE RAYMOND ESPINASSE ET FILS",
-   "ville": "Singles",
-   "code_postal": "63690",
-   "secteur": "Travaux de menuiserie bois et PVC",
-   "effectif_min": 10,
-   "effectif_max": 19,
-   "potentiel": 3.1702209461999997,
-   "siret": "38176262400017",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/38176262400017",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
-  },
-  {
-   "nom": "BUT INTERNATIONAL",
-   "ville": "Aubière",
-   "code_postal": "63170",
-   "secteur": "Commerce de détail de meubles",
-   "effectif_min": 20,
-   "effectif_max": 49,
-   "potentiel": 3.1580480353500002,
-   "siret": "72204186001781",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/72204186001781",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
   },
   {
    "nom": "EBI",
@@ -535,84 +431,6 @@
    "code_rome": "M1704"
   },
   {
-   "nom": "CONFORAMA FRANCE",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63000",
-   "secteur": "Commerce de détail de meubles",
-   "effectif_min": 50,
-   "effectif_max": 99,
-   "potentiel": 2.91931766685,
-   "siret": "41481940900536",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/41481940900536",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
-  },
-  {
-   "nom": "N2P DISTRIBUTION",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Commerce de gros (commerce interentreprises) de produits pharmaceutiques",
-   "effectif_min": 20,
-   "effectif_max": 49,
-   "potentiel": 2.3166068418000005,
-   "siret": "75094012400035",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/75094012400035",
-   "metier": "M1707",
-   "code_rome": "M1707"
-  },
-  {
-   "nom": "AUVERGNE PRODUCTIQUE INGENIERIE",
-   "ville": "Cournon-d'Auvergne",
-   "code_postal": "63800",
-   "secteur": "Travaux d'installation électrique dans tous locaux",
-   "effectif_min": 50,
-   "effectif_max": 99,
-   "potentiel": 2.16254882205,
-   "siret": "33764391000108",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/33764391000108",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
-   "nom": "SPIE ICS",
-   "ville": "Cébazat",
-   "code_postal": "63118",
-   "secteur": "Tierce maintenance de systèmes et d’applications informatiques",
-   "effectif_min": 10,
-   "effectif_max": 19,
-   "potentiel": 2.072469729,
-   "siret": "32410382900804",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/32410382900804",
-   "metier": "webmaster",
-   "code_rome": "M1855"
-  },
-  {
-   "nom": "SNEF",
-   "ville": "Cournon-d'Auvergne",
-   "code_postal": "63800",
-   "secteur": "Travaux d'installation électrique dans tous locaux",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 2.0083099689000004,
-   "siret": "05680065901641",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/05680065901641",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
-   "nom": "ENEDIS",
-   "ville": "Riom",
-   "code_postal": "63200",
-   "secteur": "Distribution d'électricité",
-   "effectif_min": 20,
-   "effectif_max": 49,
-   "potentiel": 1.9713320295499999,
-   "siret": "44460844203657",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/44460844203657",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
    "nom": "GATARD",
    "ville": "Pontaumur",
    "code_postal": "63380",
@@ -626,45 +444,6 @@
    "code_rome": "M1704"
   },
   {
-   "nom": "DANSNOSCOEURS",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63100",
-   "secteur": "Régie publicitaire de médias",
-   "effectif_min": 6,
-   "effectif_max": 9,
-   "potentiel": 1.9154725856500001,
-   "siret": "51783344800049",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/51783344800049",
-   "metier": "M1707",
-   "code_rome": "M1707"
-  },
-  {
-   "nom": "INEO RHONE ALPES AUVERGNE",
-   "ville": "Cébazat",
-   "code_postal": "63118",
-   "secteur": "Travaux d'installation électrique dans tous locaux",
-   "effectif_min": 20,
-   "effectif_max": 49,
-   "potentiel": 1.8138624763500002,
-   "siret": "40989912700024",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/40989912700024",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
-   "nom": "ENSIO EST",
-   "ville": "Cébazat",
-   "code_postal": "63118",
-   "secteur": "Travaux d'installation électrique dans tous locaux",
-   "effectif_min": 0,
-   "effectif_max": 0,
-   "potentiel": 1.76759410185,
-   "siret": "49288848200204",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/49288848200204",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
    "nom": "GATARD",
    "ville": "Saint-Éloy-les-Mines",
    "code_postal": "63700",
@@ -676,45 +455,6 @@
    "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/38391664000147",
    "metier": "responsable e-commerce",
    "code_rome": "M1704"
-  },
-  {
-   "nom": "SOCIETE INTERNATIONALE DE CONFORT AMEUBL",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63000",
-   "secteur": "Commerce de détail de meubles",
-   "effectif_min": 10,
-   "effectif_max": 19,
-   "potentiel": 1.32577914105,
-   "siret": "87320054700016",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/87320054700016",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
-  },
-  {
-   "nom": "GROUPE FLORE",
-   "ville": "Clermont-Ferrand",
-   "code_postal": "63000",
-   "secteur": "Travaux d'installation électrique dans tous locaux",
-   "effectif_min": 3,
-   "effectif_max": 5,
-   "potentiel": 1.1033311904999998,
-   "siret": "51273959000051",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/51273959000051",
-   "metier": "chef de projet web",
-   "code_rome": "F1135"
-  },
-  {
-   "nom": "CBS",
-   "ville": "Thiers",
-   "code_postal": "63300",
-   "secteur": "Commerce de détail de meubles",
-   "effectif_min": 6,
-   "effectif_max": 9,
-   "potentiel": 0.7303913545499999,
-   "siret": "50208141700011",
-   "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/50208141700011",
-   "metier": "chef de projet e-commerce",
-   "code_rome": "F1140"
   }
  ]
 }
