@@ -23,6 +23,12 @@
   "lieu": "Clermont-Ferrand",
   "distance_km": 70,
 
+  "_aide_titre": "Filtre strict : une offre n'est gardée que si son TITRE contient au moins un de ces mots. Mets [] pour désactiver ce filtre.",
+  "mots_titre": [
+    "e-commerce", "ecommerce", "e commerce", "digital", "web", "marketing", "community", "marketplace",
+    "social media", "réseaux sociaux", "seo", "traffic", "growth", "contenu", "crm", "acquisition", "shopify"
+  ],
+
   "mots_obligatoires": [],
   "_aide_exclus": "Une offre est écartée si son TITRE contient un de ces mots (majuscules et accents sans importance).",
   "mots_exclus": [

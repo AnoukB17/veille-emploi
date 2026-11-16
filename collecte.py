@@ -345,6 +345,11 @@ def offre_interessante(offre, config):
         if sans_accents(mot) in titre:
             return False
 
+    # Filtre strict : le TITRE doit contenir au moins un mot de mon domaine
+    mots_titre = config.get("mots_titre", [])
+    if mots_titre and not any(sans_accents(mot) in titre for mot in mots_titre):
+        return False
+
     # Tous les mots obligatoires doivent apparaître (titre ou description)
     for mot in config.get("mots_obligatoires", []):
         if mot.lower() not in texte:
