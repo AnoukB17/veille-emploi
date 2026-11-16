@@ -1,0 +1,9 @@
+Collecte du 16/11/2026 à 13:02 UTC
+
+❌ France Travail, connexion refusée (droits « api_labonneboitev2 search office ») : HTTP Error 400: Bad Request — {"error_description":"Client authentication failed","error":"invalid_client"}
+❌ France Travail, connexion refusée (droits « api_labonneboitev2 ») : HTTP Error 400: Bad Request — {"error_description":"Client authentication failed","error":"invalid_client"}
+   → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.
+🏢 0 entreprise(s) à fort potentiel d'embauche dans docs/entreprises.json
+🔎 0 offres collectées, 0 correspondent à tes critères
+✨ 0 nouvelle(s) offre(s) — 0 au total dans docs/offres.json
+❌ Aucune source n'a fonctionné : regarde les messages ci-dessus.
