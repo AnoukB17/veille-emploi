@@ -243,9 +243,13 @@ def collecter_bonne_boite(config):
         return []
 
     trouvees = {}   # siret -> entreprise (le siret est le numéro unique d'un établissement)
-    for metier in reglages.get("metiers", []):
+    # On peut chercher par nom de métier ("metiers") ou par code ROME ("codes_rome"),
+    # le code officiel d'un métier chez France Travail (exemple : M1707)
+    recherches = [("job", m) for m in reglages.get("metiers", [])] + \
+                 [("rome", c) for c in reglages.get("codes_rome", [])]
+    for critere, metier in recherches:
         parametres = {
-            "job": metier,
+            critere: metier,
             "latitude": reglages.get("latitude"),
             "longitude": reglages.get("longitude"),
             "distance": reglages.get("distance_km", 50),
@@ -286,8 +290,16 @@ def collecter_bonne_boite(config):
                 "siret": siret,
                 "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/" + siret,
                 "metier": metier,
+                "code_rome": e.get("rome") or "",
             }
-        print(f"✅ La Bonne Boite, « {metier} » : {len(resultats)} entreprises reçues")
+        dans_dep = [e for e in resultats if str(e.get("postcode") or "").startswith(config.get("departement", ""))]
+        codes = {}
+        for e in dans_dep:
+            codes[str(e.get("rome"))] = codes.get(str(e.get("rome")), 0) + 1
+        print(f"✅ La Bonne Boite, « {metier} » : {len(resultats)} entreprises reçues, dont {len(dans_dep)} dans le département")
+        if os.environ.get("EXPLORATION"):
+            print(f"   total annoncé : {donnees.get('hits') if isinstance(donnees, dict) else '?'} · codes ROME : {codes}")
+            print("   exemples : " + " ; ".join(f"{e.get('company_name')} ({e.get('naf_label')})" for e in dans_dep[:6]))
         time.sleep(0.6)   # l'API accepte 2 appels par seconde au maximum
 
     entreprises = sorted(trouvees.values(), key=lambda e: e["potentiel"] or 0, reverse=True)
