@@ -81,6 +81,14 @@ def jeton_france_travail(scopes_possibles):
             refus.append(f"❌ France Travail, connexion refusée (droits « {scope} ») : {detail_erreur(erreur)}")
     for message in refus:
         print(message)
+    # Diagnostic sans rien révéler : seulement la forme des deux valeurs
+    print(f"   Diagnostic — identifiant : {len(client_id)} caractères, commence par « PAR_ » : "
+          f"{'oui' if client_id.startswith('PAR_') else 'non'}, contient un espace ou un guillemet : "
+          f"{'oui' if any(c in client_id for c in ' \t\n\"') else 'non'}")
+    print(f"   Diagnostic — clé secrète : {len(client_secret)} caractères, commence par « PAR_ » : "
+          f"{'oui' if client_secret.startswith('PAR_') else 'non'}, contient un espace ou un guillemet : "
+          f"{'oui' if any(c in client_secret for c in ' \t\n\"') else 'non'}, "
+          f"identique à l'identifiant : {'oui' if client_secret == client_id else 'non'}")
     print("   → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.")
     ERREURS.append(derniere_erreur)
     return None
