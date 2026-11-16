@@ -1,8 +1,7 @@
-Collecte du 16/11/2026 à 13:07 UTC
+Collecte du 16/11/2026 à 15:12 UTC
 
-   (champs reçus : city, citycode, company_name, department, department_number, email, headcount_max, headcount_min, hiring_potential, id, is_high_potential, location, naf, naf_label, office_name, postcode, region, rome, siret)
-✅ La Bonne Boite, « responsable e-commerce » : 39 entreprises reçues, dont 29 dans le département
-✅ La Bonne Boite, « M1707 » : 8 entreprises reçues, dont 6 dans le département
-🏢 35 entreprise(s) à fort potentiel d'embauche dans docs/entreprises.json
+❌ France Travail, connexion refusée (droits « api_offresdemploiv2 o2dsoffre ») : HTTP Error 400: Bad Request — {"error_description":"Client authentication failed","error":"invalid_client"}
+   → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.
 🔎 0 offres collectées, 0 correspondent à tes critères
 ✨ 0 nouvelle(s) offre(s) — 0 au total dans docs/offres.json
+❌ Aucune source n'a fonctionné : regarde les messages ci-dessus.
