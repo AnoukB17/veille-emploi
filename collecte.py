@@ -163,25 +163,36 @@ def collecter_france_travail(config):
     if not jeton:
         return []
 
-    # Étape B : une recherche par mot-clé
+    # Étape B : une recherche par mot-clé, dans chaque groupe de départements
+    # (France Travail accepte 5 départements au maximum par recherche)
+    departements = config.get("departements") or [config.get("departement", "")]
+    lots = [departements[i:i + 5] for i in range(0, len(departements), 5)]
+    jours = config.get("jours_max", 31)   # valeurs acceptées par France Travail : 1, 3, 7, 14 ou 31
+
     offres = []
     for recherche in config["recherches"]:
-        parametres = {
-            "motsCles": recherche,
-            "departement": config.get("departement", ""),
-            "publieeDepuis": 14,      # offres publiées depuis 14 jours maximum
-            "range": "0-99",          # les 100 premières offres
-        }
-        url = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?" + urllib.parse.urlencode(parametres)
-        try:
-            requete = urllib.request.Request(url, headers={"Authorization": "Bearer " + jeton, "Accept": "application/json"})
-            with urllib.request.urlopen(requete, timeout=30) as reponse:
-                contenu = reponse.read().decode("utf-8")
-            # Quand il n'y a aucune offre, France Travail renvoie une réponse vide
-            resultats = json.loads(contenu).get("resultats", []) if contenu.strip() else []
-        except Exception as erreur:
-            print(f"❌ France Travail, recherche « {recherche} » : {detail_erreur(erreur)}")
-            ERREURS.append(erreur)
+        resultats = []
+        echec = False
+        for lot in lots:
+            parametres = {
+                "motsCles": recherche,
+                "departement": ",".join(lot),
+                "publieeDepuis": jours,
+                "range": "0-149",         # les 150 premières offres (le maximum par appel)
+            }
+            url = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?" + urllib.parse.urlencode(parametres)
+            try:
+                requete = urllib.request.Request(url, headers={"Authorization": "Bearer " + jeton, "Accept": "application/json"})
+                with urllib.request.urlopen(requete, timeout=30) as reponse:
+                    contenu = reponse.read().decode("utf-8")
+                # Quand il n'y a aucune offre, France Travail renvoie une réponse vide
+                resultats += json.loads(contenu).get("resultats", []) if contenu.strip() else []
+            except Exception as erreur:
+                print(f"❌ France Travail, recherche « {recherche} » ({','.join(lot)}) : {detail_erreur(erreur)}")
+                ERREURS.append(erreur)
+                echec = True
+            time.sleep(0.4)   # petite pause : l'API limite le nombre d'appels par seconde
+        if echec and not resultats:
             continue
 
         for o in resultats:
@@ -200,7 +211,6 @@ def collecter_france_travail(config):
                 "recherche": recherche,
             })
         print(f"✅ France Travail, « {recherche} » : {len(resultats)} offres")
-        time.sleep(0.5)   # petite pause : l'API limite le nombre d'appels par seconde
     return offres
 
 
@@ -421,7 +431,8 @@ def collecte_complete():
 
     os.makedirs(os.path.dirname(FICHIER_OFFRES), exist_ok=True)
     with open(FICHIER_OFFRES, "w", encoding="utf-8") as f:
-        json.dump({"mise_a_jour": aujourd_hui, "offres": existantes}, f, ensure_ascii=False, indent=1)
+        json.dump({"mise_a_jour": aujourd_hui, "departements": config.get("departements", []), "offres": existantes},
+                  f, ensure_ascii=False, indent=1)
 
     print(f"✨ {nouvelles} nouvelle(s) offre(s) — {len(existantes)} au total dans {FICHIER_OFFRES}")
 

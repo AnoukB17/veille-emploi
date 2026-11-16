@@ -6,9 +6,18 @@
     "chef de projet e-commerce",
     "chargé e-commerce",
     "responsable e-commerce",
-    "e-commerce"
+    "e-commerce",
+    "chef de projet digital",
+    "chef de projet web",
+    "webmarketing",
+    "marketing digital",
+    "community manager",
+    "traffic manager"
   ],
 
+  "_aide_zone": "departements = où chercher les offres : 63 Puy-de-Dôme, 03 Allier, 15 Cantal, 43 Haute-Loire, 42 Loire, 69 Rhône (Lyon). jours_max = ancienneté maximale des offres (1, 3, 7, 14 ou 31).",
+  "departements": ["63", "03", "15", "43", "42", "69"],
+  "jours_max": 31,
   "departement": "63",
 
   "_aide_adzuna": "lieu et distance_km ne servent que pour la source Adzuna (payante, désactivée)",

@@ -149,7 +149,7 @@
 
 <header class="hero">
   <div class="hero-in">
-    <p class="sur-titre">E-commerce · Puy-de-Dôme (63)</p>
+    <p class="sur-titre" id="sur-titre">E-commerce · Puy-de-Dôme et alentours</p>
     <h1>Ma veille emploi</h1>
     <p class="maj" id="maj">Chargement…</p>
   </div>
@@ -176,6 +176,7 @@
         <input id="recherche" type="search" placeholder="Rechercher un poste, une ville…" aria-label="Rechercher dans les offres">
       </label>
       <div class="puces" id="puces" role="group" aria-label="Filtrer les offres"></div>
+      <div class="puces" id="puces-dep" role="group" aria-label="Filtrer par département" hidden></div>
     </div>
     <div class="compte" id="compte" aria-live="polite"></div>
     <div id="liste"></div>
@@ -208,7 +209,10 @@
 
   let offres = [], entreprises = [];
   let statuts = lireStatuts();
-  let filtre = "toutes", filtreEnt = "toutes";
+  let filtre = "toutes", filtreEnt = "toutes", filtreDep = "tous";
+  const DEPARTEMENTS = { "63": "Puy-de-Dôme", "03": "Allier", "15": "Cantal", "43": "Haute-Loire", "42": "Loire", "69": "Rhône" };
+  // Le lieu d'une offre commence par son département : "63 - CLERMONT FERRAND"
+  function departementDe(o) { const m = /^(\d{2,3})\b/.exec(o.lieu || ""); return m ? m[1] : "autre"; }
 
   // ------------------------------ Petits outils ------------------------------
   const $ = id => document.getElementById(id);
@@ -275,8 +279,19 @@
       ["favoris", "Favoris", compte.favoris], ["postule", "Postulé", compte.postule],
     ], filtre, cle => { filtre = cle; afficher(); });
 
+    // Deuxième rangée de filtres : les départements (affichée seulement s'il y en a plusieurs)
+    const parDep = {};
+    for (const o of offres) parDep[departementDe(o)] = (parDep[departementDe(o)] || 0) + 1;
+    const deps = Object.keys(parDep).sort((a, b) => (a === "63" ? -1 : b === "63" ? 1 : parDep[b] - parDep[a]));
+    $("puces-dep").hidden = deps.length < 2;
+    if (!deps.includes(filtreDep)) filtreDep = "tous";
+    dessinerPuces($("puces-dep"), [["tous", "Tous les départements", offres.length],
+      ...deps.map(d => [d, d === "autre" ? "Autre" : `${DEPARTEMENTS[d] || d} (${d})`, parDep[d]])],
+      filtreDep, cle => { filtreDep = cle; afficher(); });
+
     const visibles = offres.filter(o => {
       const s = st(o);
+      if (filtreDep !== "tous" && departementDe(o) !== filtreDep) return false;
       if (filtre === "nouvelles" && !estNouvelle(o)) return false;
       if (filtre === "a-voir" && (s.vue || s.postule)) return false;
       if (filtre === "favoris" && !s.favori) return false;
