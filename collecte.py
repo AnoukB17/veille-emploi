@@ -302,7 +302,10 @@ def collecter_bonne_boite(config):
             print("   exemples : " + " ; ".join(f"{e.get('company_name')} ({e.get('naf_label')})" for e in dans_dep[:6]))
         time.sleep(0.6)   # l'API accepte 2 appels par seconde au maximum
 
-    entreprises = sorted(trouvees.values(), key=lambda e: e["potentiel"] or 0, reverse=True)
+    # Les recherches par code ROME sont les plus précises : on les place en premier,
+    # puis on classe par potentiel d'embauche
+    precis = set(reglages.get("codes_rome", []))
+    entreprises = sorted(trouvees.values(), key=lambda e: (e["metier"] in precis, e["potentiel"] or 0), reverse=True)
     return entreprises[: reglages.get("nombre_max", 60)]
 
 

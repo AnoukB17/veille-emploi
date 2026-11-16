@@ -28,8 +28,9 @@
   "bonne_boite": {
     "_aide": "Entreprises à fort potentiel d'embauche, pour les candidatures spontanées. Le point de départ est Clermont-Ferrand.",
     "active": true,
-    "metiers": ["chef de projet e-commerce", "responsable e-commerce", "chargé de projet e-commerce", "chef de projet web", "chef de projet digital", "marketing digital", "webmarketeur", "community manager", "traffic manager", "chef de produit web", "webmaster"],
-    "codes_rome": ["M1707", "M1705", "E1101", "E1104", "M1803", "M1806", "E1402", "M1703"],
+    "_aide_metiers": "codes_rome = recherche précise par code métier officiel (M1707 = stratégie commerciale, dont responsable e-commerce). metiers = recherche plus large par nom de métier.",
+    "codes_rome": ["M1707"],
+    "metiers": ["responsable e-commerce"],
     "latitude": 45.7772,
     "longitude": 3.0870,
     "distance_km": 70,

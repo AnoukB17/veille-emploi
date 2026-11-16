@@ -211,7 +211,7 @@
     liste.innerHTML = visibles.map((e, i) => {
       const st = statuts["ent:" + e.siret] || {};
       const pot = Math.max(0, Math.min(100, Math.round(e.potentiel || 0)));
-      const effectif = e.effectif_min != null
+      const effectif = e.effectif_min
         ? ` · ${e.effectif_min}${e.effectif_max && e.effectif_max !== e.effectif_min ? " à " + e.effectif_max : "+"} salariés` : "";
       const recherche = "https://www.google.com/search?q=" + encodeURIComponent(e.nom + " " + e.ville + " recrutement");
       return `
