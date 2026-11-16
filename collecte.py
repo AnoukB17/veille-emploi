@@ -330,12 +330,19 @@ def collecter_bonne_boite(config):
 # ---------------------------------------------------------------------------
 # 3. FILTRE — est-ce que cette offre m'intéresse ?
 # ---------------------------------------------------------------------------
+def sans_accents(texte):
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFD", texte.lower()) if unicodedata.category(c) != "Mn")
+
+
 def offre_interessante(offre, config):
     texte = (offre["titre"] + " " + offre["description"]).lower()
 
     # Un mot exclu dans le TITRE suffit à écarter l'offre
+    # (on compare sans accents ni majuscules : "EMPLOYE" et "employé" sont pareils)
+    titre = sans_accents(offre["titre"])
     for mot in config.get("mots_exclus", []):
-        if mot.lower() in offre["titre"].lower():
+        if sans_accents(mot) in titre:
             return False
 
     # Tous les mots obligatoires doivent apparaître (titre ou description)
@@ -406,7 +413,8 @@ def collecte_complete():
     print(f"🔎 {len(collectees)} offres collectées, {len(retenues)} correspondent à tes critères")
 
     # Fusion : le lien sert d'identifiant unique, pour ne jamais garder de doublon
-    existantes = charger_offres_existantes()
+    # On repasse aussi les offres déjà enregistrées au filtre, au cas où les réglages ont changé
+    existantes = [o for o in charger_offres_existantes() if offre_interessante(o, config)]
     deja_vus = {o["lien"] for o in existantes}
     titres_vus = {(o["titre"].lower(), o["entreprise"].lower()) for o in existantes}
 

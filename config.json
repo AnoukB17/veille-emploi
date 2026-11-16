@@ -4,7 +4,6 @@
   "recherches": [
     "chargé de projet e-commerce",
     "chef de projet e-commerce",
-    "chargé e-commerce",
     "responsable e-commerce",
     "e-commerce",
     "chef de projet digital",
@@ -25,9 +24,12 @@
   "distance_km": 70,
 
   "mots_obligatoires": [],
+  "_aide_exclus": "Une offre est écartée si son TITRE contient un de ces mots (majuscules et accents sans importance).",
   "mots_exclus": [
     "stage", "stagiaire", "alternance", "alternant", "apprenti",
-    "préparateur", "préparatrice", "magasinier", "cariste", "livreur", "manutention"
+    "préparateur", "préparatrice", "magasinier", "cariste", "livreur", "manutention",
+    "employé", "vendeur", "vendeuse", "caissier", "caissière", "vrp", "technicien", "poseur",
+    "secrétaire", "chauffeur", "conseiller de vente", "hôte", "boucher", "boulanger"
   ],
 
   "salaire_min": 0,
