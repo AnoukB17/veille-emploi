@@ -1,9 +1,9 @@
-Collecte du 16/11/2026 à 15:16 UTC
+Collecte du 16/11/2026 à 15:24 UTC
 
-❌ France Travail, connexion refusée (droits « api_offresdemploiv2 o2dsoffre ») : HTTP Error 400: Bad Request — {"error_description":"Client authentication failed","error":"invalid_client"}
-   Diagnostic — identifiant : 81 caractères, commence par « PAR_ » : oui, contient un espace ou un guillemet : non
-   Diagnostic — clé secrète : 64 caractères, commence par « PAR_ » : non, contient un espace ou un guillemet : non, identique à l'identifiant : non
-   → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.
-🔎 0 offres collectées, 0 correspondent à tes critères
-✨ 0 nouvelle(s) offre(s) — 0 au total dans docs/offres.json
-❌ Aucune source n'a fonctionné : regarde les messages ci-dessus.
+✅ France Travail, « chargé de projet e-commerce » : 0 offres
+✅ France Travail, « chef de projet e-commerce » : 0 offres
+✅ France Travail, « chargé e-commerce » : 3 offres
+✅ France Travail, « responsable e-commerce » : 0 offres
+✅ France Travail, « e-commerce » : 5 offres
+🔎 8 offres collectées, 8 correspondent à tes critères
+✨ 4 nouvelle(s) offre(s) — 4 au total dans docs/offres.json
