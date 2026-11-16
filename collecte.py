@@ -7,6 +7,8 @@ Ce qu'il fait, dans l'ordre :
   3. FILTRE   : garde seulement les offres qui correspondent à tes critères
   4. STOCKE   : ajoute les nouvelles offres dans docs/offres.json
                (le fichier que lit ta page web)
+  + BONUS     : liste les entreprises qui recrutent souvent (La Bonne Boite)
+               dans docs/entreprises.json
 
 GitHub Actions lance ce fichier automatiquement chaque matin.
 Tu peux aussi le lancer toi-même sur ton ordinateur : python collecte.py
@@ -24,6 +26,64 @@ FICHIER_OFFRES = "docs/offres.json"
 
 # On note ici chaque problème rencontré pendant la collecte
 ERREURS = []
+
+# Tout ce que le robot affiche est aussi gardé ici, puis enregistré dans docs/journal.txt
+# (pratique pour comprendre ce qui s'est passé sans fouiller dans GitHub Actions)
+FICHIER_ENTREPRISES = "docs/entreprises.json"
+FICHIER_JOURNAL = "docs/journal.txt"
+JOURNAL = []
+_afficher = print
+
+
+def print(*morceaux):
+    JOURNAL.append(" ".join(str(m) for m in morceaux))
+    _afficher(*morceaux)
+
+
+def detail_erreur(erreur):
+    """Ajoute à une erreur web le message d'explication renvoyé par le site (s'il y en a un)."""
+    texte = str(erreur)
+    try:
+        texte += " — " + erreur.read().decode("utf-8", "replace")[:300]
+    except Exception:
+        pass
+    return texte
+
+
+def jeton_france_travail(scopes_possibles):
+    """Échange nos identifiants France Travail contre un "jeton" d'accès valable quelques minutes.
+    On essaie chaque scope (= la liste des droits demandés) jusqu'à ce qu'un soit accepté."""
+    client_id = (os.environ.get("FRANCE_TRAVAIL_CLIENT_ID") or "").strip()
+    client_secret = (os.environ.get("FRANCE_TRAVAIL_CLIENT_SECRET") or "").strip()
+    if not client_id or not client_secret:
+        print("⚠️  France Travail ignoré : clés FRANCE_TRAVAIL_CLIENT_ID / FRANCE_TRAVAIL_CLIENT_SECRET absentes (voir README).")
+        return None
+
+    derniere_erreur = None
+    refus = []
+    for scope in scopes_possibles:
+        try:
+            corps = urllib.parse.urlencode({
+                "grant_type": "client_credentials",
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "scope": scope,
+            }).encode("utf-8")
+            requete = urllib.request.Request(
+                "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=%2Fpartenaire",
+                data=corps,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            with urllib.request.urlopen(requete, timeout=30) as reponse:
+                return json.loads(reponse.read().decode("utf-8"))["access_token"]
+        except Exception as erreur:
+            derniere_erreur = erreur
+            refus.append(f"❌ France Travail, connexion refusée (droits « {scope} ») : {detail_erreur(erreur)}")
+    for message in refus:
+        print(message)
+    print("   → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.")
+    ERREURS.append(derniere_erreur)
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -90,31 +150,9 @@ def collecter_adzuna(config):
 
 def collecter_france_travail(config):
     """France Travail (ex-Pôle emploi) : l'API officielle et gratuite, la plus grosse source en France."""
-    client_id = (os.environ.get("FRANCE_TRAVAIL_CLIENT_ID") or "").strip()
-    client_secret = (os.environ.get("FRANCE_TRAVAIL_CLIENT_SECRET") or "").strip()
-    if not client_id or not client_secret:
-        print("⚠️  France Travail ignoré : clés FRANCE_TRAVAIL_CLIENT_ID / FRANCE_TRAVAIL_CLIENT_SECRET absentes (voir README).")
-        return []
-
-    # Étape A : échanger nos identifiants contre un "jeton" d'accès valable quelques minutes
-    try:
-        corps = urllib.parse.urlencode({
-            "grant_type": "client_credentials",
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "scope": "api_offresdemploiv2 o2dsoffre",
-        }).encode("utf-8")
-        requete = urllib.request.Request(
-            "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=%2Fpartenaire",
-            data=corps,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-        )
-        with urllib.request.urlopen(requete, timeout=30) as reponse:
-            jeton = json.loads(reponse.read().decode("utf-8"))["access_token"]
-    except Exception as erreur:
-        print(f"❌ France Travail, connexion refusée : {erreur}")
-        print("   → Vérifie tes deux clés, et que l'API « Offres d'emploi v2 » est bien ajoutée à ton application.")
-        ERREURS.append(erreur)
+    # Étape A : obtenir un jeton d'accès
+    jeton = jeton_france_travail(["api_offresdemploiv2 o2dsoffre"])
+    if not jeton:
         return []
 
     # Étape B : une recherche par mot-clé
@@ -134,7 +172,7 @@ def collecter_france_travail(config):
             # Quand il n'y a aucune offre, France Travail renvoie une réponse vide
             resultats = json.loads(contenu).get("resultats", []) if contenu.strip() else []
         except Exception as erreur:
-            print(f"❌ France Travail, recherche « {recherche} » : {erreur}")
+            print(f"❌ France Travail, recherche « {recherche} » : {detail_erreur(erreur)}")
             ERREURS.append(erreur)
             continue
 
@@ -195,6 +233,68 @@ SOURCES = {
 
 
 # ---------------------------------------------------------------------------
+# BONUS — La Bonne Boite : les entreprises qui ont de fortes chances d'embaucher
+#         (pour envoyer des candidatures spontanées, même sans annonce publiée)
+# ---------------------------------------------------------------------------
+def collecter_bonne_boite(config):
+    reglages = config.get("bonne_boite", {})
+    jeton = jeton_france_travail(["api_labonneboitev2 search office", "api_labonneboitev2"])
+    if not jeton:
+        return []
+
+    trouvees = {}   # siret -> entreprise (le siret est le numéro unique d'un établissement)
+    for metier in reglages.get("metiers", []):
+        parametres = {
+            "job": metier,
+            "latitude": reglages.get("latitude"),
+            "longitude": reglages.get("longitude"),
+            "distance": reglages.get("distance_km", 50),
+            "page": 1,
+            "page_size": 100,
+        }
+        url = "https://api.francetravail.io/partenaire/labonneboite/v2/recherche?" + urllib.parse.urlencode(parametres)
+        try:
+            requete = urllib.request.Request(url, headers={"Authorization": "Bearer " + jeton, "Accept": "application/json"})
+            with urllib.request.urlopen(requete, timeout=30) as reponse:
+                contenu = reponse.read().decode("utf-8")
+            donnees = json.loads(contenu) if contenu.strip() else {}
+        except Exception as erreur:
+            print(f"❌ La Bonne Boite, métier « {metier} » : {detail_erreur(erreur)}")
+            ERREURS.append(erreur)
+            continue
+
+        resultats = donnees.get("items") or donnees.get("companies") or [] if isinstance(donnees, dict) else donnees
+        if resultats and not trouvees:
+            # Pour vérifier le format des données la première fois
+            print("   (champs reçus : " + ", ".join(sorted(resultats[0].keys())) + ")")
+        for e in resultats:
+            code_postal = str(e.get("postcode") or "")
+            departement = config.get("departement", "")
+            if departement and code_postal and not code_postal.startswith(departement):
+                continue
+            siret = str(e.get("siret") or "")
+            if not siret or siret in trouvees:
+                continue
+            trouvees[siret] = {
+                "nom": e.get("company_name") or e.get("office_name") or "",
+                "ville": e.get("city") or "",
+                "code_postal": code_postal,
+                "secteur": e.get("naf_label") or "",
+                "effectif_min": e.get("headcount_min"),
+                "effectif_max": e.get("headcount_max"),
+                "potentiel": e.get("hiring_potential"),
+                "siret": siret,
+                "lien": "https://annuaire-entreprises.data.gouv.fr/etablissement/" + siret,
+                "metier": metier,
+            }
+        print(f"✅ La Bonne Boite, « {metier} » : {len(resultats)} entreprises reçues")
+        time.sleep(0.6)   # l'API accepte 2 appels par seconde au maximum
+
+    entreprises = sorted(trouvees.values(), key=lambda e: e["potentiel"] or 0, reverse=True)
+    return entreprises[: reglages.get("nombre_max", 60)]
+
+
+# ---------------------------------------------------------------------------
 # 3. FILTRE — est-ce que cette offre m'intéresse ?
 # ---------------------------------------------------------------------------
 def offre_interessante(offre, config):
@@ -237,10 +337,30 @@ def nettoyer_description(texte, longueur=400):
 
 
 def main():
+    try:
+        collecte_complete()
+    finally:
+        # Quoi qu'il arrive, on enregistre le journal de cette collecte
+        os.makedirs(os.path.dirname(FICHIER_JOURNAL), exist_ok=True)
+        with open(FICHIER_JOURNAL, "w", encoding="utf-8") as f:
+            f.write("Collecte du " + datetime.now(timezone.utc).strftime("%d/%m/%Y à %H:%M UTC") + "\n\n")
+            f.write("\n".join(JOURNAL) + "\n")
+
+
+def collecte_complete():
     with open(FICHIER_CONFIG, encoding="utf-8") as f:
         config = json.load(f)
 
     aujourd_hui = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # Bonus : entreprises à contacter en candidature spontanée
+    entreprises = []
+    if config.get("bonne_boite", {}).get("active"):
+        entreprises = collecter_bonne_boite(config)
+        if entreprises:
+            with open(FICHIER_ENTREPRISES, "w", encoding="utf-8") as f:
+                json.dump({"mise_a_jour": aujourd_hui, "entreprises": entreprises}, f, ensure_ascii=False, indent=1)
+        print(f"🏢 {len(entreprises)} entreprise(s) à fort potentiel d'embauche dans {FICHIER_ENTREPRISES}")
 
     # Collecte de toutes les sources activées
     collectees = []
@@ -283,7 +403,7 @@ def main():
     print(f"✨ {nouvelles} nouvelle(s) offre(s) — {len(existantes)} au total dans {FICHIER_OFFRES}")
 
     # Si AUCUNE source n'a répondu, on termine en erreur : GitHub affichera une croix rouge
-    if ERREURS and not collectees:
+    if ERREURS and not collectees and not entreprises:
         print("❌ Aucune source n'a fonctionné : regarde les messages ci-dessus.")
         raise SystemExit(1)
 

@@ -40,7 +40,17 @@
            border: 1px solid var(--bord); border-radius: 6px; background: transparent;
            color: var(--texte); cursor: pointer; }
   .actions button.actif { border-color: var(--accent); color: var(--accent); }
+  .actions a { color: var(--accent); }
   .vide { text-align: center; color: var(--doux); padding: 40px 0; }
+  .onglets { display: flex; gap: 4px; border-bottom: 1px solid var(--bord); margin-bottom: 18px; }
+  .onglets button { font: inherit; font-weight: 600; padding: 10px 14px; border: 0; background: none;
+           color: var(--doux); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+  .onglets button.actif { color: var(--accent); border-bottom-color: var(--accent); }
+  .explication { color: var(--doux); font-size: .92rem; margin: 0 0 16px; }
+  .potentiel { display: inline-block; width: 70px; height: 7px; border-radius: 99px; background: var(--bord);
+           vertical-align: middle; margin: 0 6px 2px 0; overflow: hidden; }
+  .potentiel i { display: block; height: 100%; background: var(--nouveau); }
+  [hidden] { display: none !important; }
 </style>
 </head>
 <body>
@@ -48,6 +58,12 @@
   <h1>Ma veille emploi</h1>
   <p class="maj" id="maj">Chargement…</p>
 
+  <div class="onglets">
+    <button id="onglet-offres" class="actif">Offres d'emploi</button>
+    <button id="onglet-entreprises">Entreprises à contacter</button>
+  </div>
+
+  <section id="vue-offres">
   <div class="barre">
     <input id="recherche" type="search" placeholder="Rechercher (titre, entreprise, ville…)">
     <select id="filtre">
@@ -60,6 +76,22 @@
 
   <div class="compte" id="compte"></div>
   <div id="liste"></div>
+  </section>
+
+  <section id="vue-entreprises" hidden>
+    <p class="explication">Ces entreprises du Puy-de-Dôme ont de fortes chances d'embaucher dans ton métier,
+      même sans annonce publiée (source : La Bonne Boite, France Travail). Idéal pour une candidature spontanée.</p>
+    <div class="barre">
+      <input id="recherche-ent" type="search" placeholder="Rechercher (nom, ville, secteur…)">
+      <select id="filtre-ent">
+        <option value="toutes">Toutes les entreprises</option>
+        <option value="a-faire">Pas encore contactées</option>
+        <option value="contactee">Déjà contactées</option>
+      </select>
+    </div>
+    <div class="compte" id="compte-ent"></div>
+    <div id="liste-ent"></div>
+  </section>
 </main>
 
 <script>
@@ -153,6 +185,70 @@
       afficher();
     })
     .catch(() => { document.getElementById("maj").textContent = "Impossible de charger les offres."; });
+
+  // ----- Onglet "Entreprises à contacter" -----
+  let entreprises = [];
+
+  function afficherEntreprises() {
+    const q = document.getElementById("recherche-ent").value.toLowerCase().trim();
+    const filtre = document.getElementById("filtre-ent").value;
+    const visibles = entreprises.filter(e => {
+      const st = statuts["ent:" + e.siret] || {};
+      if (filtre === "a-faire" && st.contactee) return false;
+      if (filtre === "contactee" && !st.contactee) return false;
+      if (q && !(e.nom + " " + e.ville + " " + e.secteur).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    document.getElementById("compte-ent").textContent =
+      `${visibles.length} entreprise${visibles.length > 1 ? "s" : ""} affichée${visibles.length > 1 ? "s" : ""}`;
+
+    const liste = document.getElementById("liste-ent");
+    if (!visibles.length) {
+      liste.innerHTML = `<p class="vide">${entreprises.length ? "Aucune entreprise ne correspond à ce filtre." :
+        "Pas encore d'entreprises. Elles apparaîtront après la prochaine collecte."}</p>`;
+      return;
+    }
+    liste.innerHTML = visibles.map((e, i) => {
+      const st = statuts["ent:" + e.siret] || {};
+      const pot = Math.max(0, Math.min(100, Math.round(e.potentiel || 0)));
+      const effectif = e.effectif_min != null
+        ? ` · ${e.effectif_min}${e.effectif_max && e.effectif_max !== e.effectif_min ? " à " + e.effectif_max : "+"} salariés` : "";
+      const recherche = "https://www.google.com/search?q=" + encodeURIComponent(e.nom + " " + e.ville + " recrutement");
+      return `
+      <article class="offre ${st.contactee ? "vue" : ""}">
+        <h2>${st.contactee ? '<span class="badge b-postule">Contactée</span>' : ""}
+          <a href="${echapper(e.lien)}" target="_blank" rel="noopener">${echapper(e.nom)}</a></h2>
+        <div class="infos">${echapper(e.ville)}${e.code_postal ? " (" + echapper(e.code_postal) + ")" : ""}${
+          e.secteur ? " · " + echapper(e.secteur) : ""}${effectif}</div>
+        <p class="desc"><span class="potentiel"><i style="width:${pot}%"></i></span>Potentiel d'embauche : ${pot} / 100</p>
+        <div class="infos actions">
+          <button data-i="${i}" class="${st.contactee ? "actif" : ""}">${st.contactee ? "✓ Contactée" : "Marquer contactée"}</button>
+          <a href="${recherche}" target="_blank" rel="noopener">Chercher leur page recrutement</a>
+        </div>
+      </article>`;
+    }).join("");
+    liste.querySelectorAll("button[data-i]").forEach(b => b.onclick = () => {
+      const cle = "ent:" + visibles[b.dataset.i].siret;
+      statuts[cle] = { contactee: !(statuts[cle] || {}).contactee };
+      sauverStatuts(statuts); afficherEntreprises();
+    });
+  }
+
+  fetch("entreprises.json?v=" + Date.now())
+    .then(r => r.json())
+    .then(d => { entreprises = d.entreprises || []; afficherEntreprises(); })
+    .catch(() => afficherEntreprises());
+
+  function choisirOnglet(nom) {
+    for (const n of ["offres", "entreprises"]) {
+      document.getElementById("vue-" + n).hidden = n !== nom;
+      document.getElementById("onglet-" + n).classList.toggle("actif", n === nom);
+    }
+  }
+  document.getElementById("onglet-offres").onclick = () => choisirOnglet("offres");
+  document.getElementById("onglet-entreprises").onclick = () => choisirOnglet("entreprises");
+  document.getElementById("recherche-ent").oninput = afficherEntreprises;
+  document.getElementById("filtre-ent").onchange = afficherEntreprises;
 
   document.getElementById("recherche").oninput = afficher;
   document.getElementById("filtre").onchange = afficher;

@@ -25,8 +25,19 @@
 
   "garder_les_offres_pendant_jours": 45,
 
+  "bonne_boite": {
+    "_aide": "Entreprises à fort potentiel d'embauche, pour les candidatures spontanées. Le point de départ est Clermont-Ferrand.",
+    "active": true,
+    "metiers": ["e-commerce", "chef de projet e-commerce", "webmarketing"],
+    "latitude": 45.7772,
+    "longitude": 3.0870,
+    "distance_km": 70,
+    "nombre_max": 60
+  },
+
+  "_aide_sources": "france_travail = l'API Offres d'emploi v2 : à repasser à true le jour où elle est ajoutée à l'application",
   "sources": {
-    "france_travail": true,
+    "france_travail": false,
     "adzuna": false,
     "remotive": false
   }
