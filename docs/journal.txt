@@ -1,14 +1,14 @@
-Collecte du 17/11/2026 à 08:41 UTC
+Collecte du 17/11/2026 à 16:00 UTC
 
 ✅ France Travail, « chargé de projet e-commerce » : 1 offres
-✅ France Travail, « chef de projet e-commerce » : 1 offres
-✅ France Travail, « responsable e-commerce » : 23 offres
-✅ France Travail, « e-commerce » : 57 offres
+❌ France Travail, recherche « chef de projet e-commerce » (69) : HTTP Error 429: Too Many Requests — 
+✅ France Travail, « responsable e-commerce » : 24 offres
+✅ France Travail, « e-commerce » : 60 offres
 ✅ France Travail, « chef de projet digital » : 8 offres
 ✅ France Travail, « chef de projet web » : 14 offres
 ✅ France Travail, « webmarketing » : 0 offres
-✅ France Travail, « marketing digital » : 20 offres
+✅ France Travail, « marketing digital » : 21 offres
 ✅ France Travail, « community manager » : 9 offres
 ✅ France Travail, « traffic manager » : 0 offres
-🔎 133 offres collectées, 40 correspondent à tes critères
-✨ 2 nouvelle(s) offre(s) — 25 au total dans docs/offres.json
+🔎 137 offres collectées, 42 correspondent à tes critères
+✨ 1 nouvelle(s) offre(s) — 26 au total dans docs/offres.json
