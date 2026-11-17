@@ -200,7 +200,7 @@ def collecter_france_travail(config):
                 "https://candidat.francetravail.fr/offres/recherche/detail/" + str(o.get("id", ""))
             offres.append({
                 "titre": o.get("intitule", ""),
-                "entreprise": (o.get("entreprise") or {}).get("nom", "") or "Entreprise non précisée",
+                "entreprise": (o.get("entreprise") or {}).get("nom", "") or "Nom non communiqué",   # nom masqué par le recruteur
                 "lieu": (o.get("lieuTravail") or {}).get("libelle", ""),
                 "description": o.get("description", ""),
                 "salaire_min": None,
