@@ -1,4 +1,4 @@
-Collecte du 18/11/2026 à 13:49 UTC
+Collecte du 18/11/2026 à 15:41 UTC
 
 ✅ France Travail, « chargé de projet e-commerce » : 1 offres
 ✅ France Travail, « chef de projet e-commerce » : 1 offres
@@ -11,4 +11,4 @@ Collecte du 18/11/2026 à 13:49 UTC
 ✅ France Travail, « community manager » : 9 offres
 ✅ France Travail, « traffic manager » : 0 offres
 🔎 152 offres collectées, 45 correspondent à tes critères
-✨ 2 nouvelle(s) offre(s) — 28 au total dans docs/offres.json
+✨ 0 nouvelle(s) offre(s) — 28 au total dans docs/offres.json
