@@ -1,5 +1,5 @@
 {
- "mise_a_jour": "2026-11-17",
+ "mise_a_jour": "2026-11-18",
  "departements": [
   "63",
   "03",
@@ -9,6 +9,32 @@
   "69"
  ],
  "offres": [
+  {
+   "titre": "Chef de projets marketing digital - SEO (H/F)",
+   "entreprise": "Momento",
+   "lieu": "69 - Lyon 3e Arrondissement",
+   "description": "Notre client est un acteur majeur du SaaS B2B dans le secteur de la construction, présent en Europe. Ses solutions aident les professionnels du secteur à digitaliser leurs processus. En forte croissance, le groupe renforce son équipe marketing en France et recrute un(e) Chef de projet marketing digital spécialisé(e) en SEO. Le poste : Au sein de l'équipe Marketing France, vous développez la visibi…",
+   "salaire_min": null,
+   "contrat": "CDI",
+   "lien": "https://candidat.francetravail.fr/offres/recherche/detail/8952353",
+   "publiee_le": "2026-11-18",
+   "source": "France Travail",
+   "recherche": "marketing digital",
+   "ajoutee_le": "2026-11-18"
+  },
+  {
+   "titre": "Chef de Projet Digital (H/F)",
+   "entreprise": "INTRUM",
+   "lieu": "69 - ST PRIEST",
+   "description": "Nous recherchons un.e Chef.fe de Projet avec du talent et expérimenté.e pour rejoindre notre équipe IT dynamique. Accompagné.e par votre Responsable, vos missions principales seront les suivantes : -Piloter des projets transverses de bout en bout (compréhension du besoin, mise en place et suivi du projet, améliorations continues, retour des utilisateurs.). -Identifier les risques, alertes et point…",
+   "salaire_min": null,
+   "contrat": "CDI",
+   "lien": "https://candidat.francetravail.fr/offres/recherche/detail/216NJSW",
+   "publiee_le": "2026-11-17",
+   "source": "France Travail",
+   "recherche": "chef de projet digital",
+   "ajoutee_le": "2026-11-18"
+  },
   {
    "titre": "Community manager (H/F)",
    "entreprise": "JOBMANIA",
