@@ -50,6 +50,20 @@ def detail_erreur(erreur):
     return texte
 
 
+def lire_avec_patience(requete, essais=4):
+    """Lit une adresse web. Si le site répond « trop de demandes » (erreur 429),
+    on attend un peu puis on réessaie, au lieu d'abandonner la recherche."""
+    import urllib.error
+    for essai in range(essais):
+        try:
+            with urllib.request.urlopen(requete, timeout=30) as reponse:
+                return reponse.read().decode("utf-8")
+        except urllib.error.HTTPError as erreur:
+            if erreur.code != 429 or essai == essais - 1:
+                raise
+            time.sleep(2 * (essai + 1))   # 2 s, puis 4 s, puis 6 s
+
+
 def jeton_france_travail(scopes_possibles):
     """Échange nos identifiants France Travail contre un "jeton" d'accès valable quelques minutes.
     On essaie chaque scope (= la liste des droits demandés) jusqu'à ce qu'un soit accepté."""
@@ -183,15 +197,14 @@ def collecter_france_travail(config):
             url = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?" + urllib.parse.urlencode(parametres)
             try:
                 requete = urllib.request.Request(url, headers={"Authorization": "Bearer " + jeton, "Accept": "application/json"})
-                with urllib.request.urlopen(requete, timeout=30) as reponse:
-                    contenu = reponse.read().decode("utf-8")
+                contenu = lire_avec_patience(requete)
                 # Quand il n'y a aucune offre, France Travail renvoie une réponse vide
                 resultats += json.loads(contenu).get("resultats", []) if contenu.strip() else []
             except Exception as erreur:
                 print(f"❌ France Travail, recherche « {recherche} » ({','.join(lot)}) : {detail_erreur(erreur)}")
                 ERREURS.append(erreur)
                 echec = True
-            time.sleep(0.4)   # petite pause : l'API limite le nombre d'appels par seconde
+            time.sleep(0.7)   # petite pause : l'API limite le nombre d'appels par seconde
         if echec and not resultats:
             continue
 
