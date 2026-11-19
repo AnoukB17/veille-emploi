@@ -457,7 +457,15 @@ def collecte_complete():
 
     os.makedirs(os.path.dirname(FICHIER_OFFRES), exist_ok=True)
     with open(FICHIER_OFFRES, "w", encoding="utf-8") as f:
-        json.dump({"mise_a_jour": aujourd_hui, "departements": config.get("departements", []), "offres": existantes},
+        # On enregistre aussi les réglages, pour les afficher en bas de la page
+        reglages = {
+            "recherches": config.get("recherches", []),
+            "jours_max": config.get("jours_max", 31),
+            "mots_titre": config.get("mots_titre", []),
+            "mots_exclus": config.get("mots_exclus", []),
+            "conservation": config.get("garder_les_offres_pendant_jours", 45),
+        }
+        json.dump({"mise_a_jour": aujourd_hui, "departements": config.get("departements", []), "reglages": reglages, "offres": existantes},
                   f, ensure_ascii=False, indent=1)
 
     print(f"✨ {nouvelles} nouvelle(s) offre(s) — {len(existantes)} au total dans {FICHIER_OFFRES}")
