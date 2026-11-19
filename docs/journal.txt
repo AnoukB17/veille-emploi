@@ -1,14 +1,9 @@
-Collecte du 19/11/2026 à 12:30 UTC
+Collecte du 19/11/2026 à 23:12 UTC
 
-✅ France Travail, « chargé de projet e-commerce » : 1 offres
-✅ France Travail, « chef de projet e-commerce » : 1 offres
-✅ France Travail, « responsable e-commerce » : 28 offres
-✅ France Travail, « e-commerce » : 77 offres
-✅ France Travail, « chef de projet digital » : 9 offres
-✅ France Travail, « chef de projet web » : 15 offres
-✅ France Travail, « webmarketing » : 0 offres
-✅ France Travail, « marketing digital » : 19 offres
-✅ France Travail, « community manager » : 9 offres
-✅ France Travail, « traffic manager » : 1 offres
-🔎 160 offres collectées, 39 correspondent à tes critères
+❌ France Travail, connexion refusée (droits « api_offresdemploiv2 o2dsoffre ») : Expecting value: line 1 column 1 (char 0)
+   Diagnostic — identifiant : 81 caractères, commence par « PAR_ » : oui, contient un espace ou un guillemet : non
+   Diagnostic — clé secrète : 64 caractères, commence par « PAR_ » : non, contient un espace ou un guillemet : non, identique à l'identifiant : non
+   → Vérifie tes deux clés, et que l'API demandée est bien ajoutée à ton application sur francetravail.io.
+🔎 0 offres collectées, 0 correspondent à tes critères
 ✨ 0 nouvelle(s) offre(s) — 28 au total dans docs/offres.json
+❌ Aucune source n'a fonctionné : regarde les messages ci-dessus.
