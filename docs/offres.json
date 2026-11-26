@@ -1,5 +1,5 @@
 {
- "mise_a_jour": "2026-11-25",
+ "mise_a_jour": "2026-11-26",
  "departements": [
   "63",
   "03",
@@ -71,6 +71,19 @@
   "conservation": 45
  },
  "offres": [
+  {
+   "titre": "Chargé(e) de marketing digital et IA - sites web, intranet et applications SaaS (H/F)",
+   "entreprise": "Nom non communiqué",
+   "lieu": "69 - Vourles",
+   "description": "Qui sommes-nous ? Hunamo est un groupe entrepreneurial indépendant de la région lyonnaise. Il développe plusieurs activités : construction de maisons individuelles, édition d'une solution SaaS de gestion de documents et de paiements,... Notre organisation est à taille humaine. Nous privilégions l'autonomie, l'initiative et l'efficacité, et nous utilisons l'intelligence artificielle au quotidien po…",
+   "salaire_min": null,
+   "contrat": "CDI",
+   "lien": "https://candidat.francetravail.fr/offres/recherche/detail/9187198",
+   "publiee_le": "2026-11-25",
+   "source": "France Travail",
+   "recherche": "marketing digital",
+   "ajoutee_le": "2026-11-26"
+  },
   {
    "titre": "Chargé de marketing digital et communication (H/F)",
    "entreprise": "ARTEVA",
